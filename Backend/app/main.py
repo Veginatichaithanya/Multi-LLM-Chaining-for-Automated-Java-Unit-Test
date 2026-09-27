@@ -155,7 +155,26 @@ app.include_router(users.router)
 app.include_router(api_router)
 
 
-# ── Health check ─────────────────────────────────────────────────────────────
+# ── Root & Health check ──────────────────────────────────────────────────────
+@app.get("/", tags=["System"], summary="API Root endpoint")
+def root() -> dict[str, Any]:
+    """
+    Root endpoint to confirm the service is live.
+    Provides API information and links to interactive documentation.
+    """
+    return {
+        "status": "online",
+        "service": settings.APP_TITLE,
+        "version": settings.APP_VERSION,
+        "environment": settings.APP_ENV,
+        "message": "TestForge AI Multi-LLM API is running successfully.",
+        "docs_url": "/docs",
+        "redoc_url": "/redoc",
+        "health_url": "/health",
+        "api_health_url": "/api/health",
+    }
+
+
 @app.get("/health", tags=["System"], summary="Simple health check")
 def health_check_root() -> dict[str, str]:
     """Returns 200 OK when the service is running."""
