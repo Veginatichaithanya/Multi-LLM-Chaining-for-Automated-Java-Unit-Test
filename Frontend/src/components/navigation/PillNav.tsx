@@ -85,8 +85,8 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
       <div
         className={`w-full max-w-6xl flex items-center justify-between px-3 sm:px-5 py-2.5 rounded-full transition-all duration-300 ${
           scrolled
-            ? 'bg-[#0b0f17]/90 backdrop-blur-md border border-slate-800/90 shadow-2xl shadow-cyan-950/20'
-            : 'bg-[#0d121c]/70 backdrop-blur-sm border border-slate-800/50'
+            ? 'dark:bg-[#0b0f17]/90 dark:border-slate-800/90 dark:shadow-2xl dark:shadow-cyan-950/20 bg-white/95 border border-slate-200 shadow-xl shadow-slate-200/50 backdrop-blur-md'
+            : 'dark:bg-[#0d121c]/70 dark:border-slate-800/50 bg-white/80 border border-slate-200/80 backdrop-blur-sm shadow-sm'
         }`}
       >
         {/* Brand Logo */}
@@ -99,19 +99,19 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
           className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg pr-2"
           aria-label="TestForge AI Home"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:border-cyan-400 transition-colors shadow-sm shadow-cyan-500/20">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-500 group-hover:border-cyan-400 transition-colors shadow-sm shadow-cyan-500/20">
             <Cpu className="w-4 h-4" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
-              TestForge <span className="text-cyan-400 font-mono text-xs px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/60">AI</span>
+            <span className="font-bold text-sm tracking-tight dark:text-white text-slate-900 flex items-center gap-1.5">
+              TestForge <span className="dark:text-cyan-400 dark:bg-cyan-950/60 dark:border-cyan-800/60 text-cyan-800 bg-cyan-50 border border-cyan-200 font-mono text-xs px-1.5 py-0.5 rounded">AI</span>
             </span>
           </div>
         </a>
 
         {/* Desktop Navigation Pills */}
         <nav
-          className="hidden md:flex items-center p-1 rounded-full bg-slate-900/80 border border-slate-800/80 shadow-inner"
+          className="hidden md:flex items-center p-1 rounded-full dark:bg-slate-900/80 dark:border-slate-800/80 bg-slate-100 border border-slate-200 shadow-inner"
           aria-label="Main Navigation"
         >
           {navItems.map((item) => {
@@ -126,13 +126,13 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
                 }}
                 className={`relative px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                   isActive
-                    ? 'text-white bg-gradient-to-r from-slate-800 to-slate-800/90 shadow-sm border border-slate-700/60'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                    ? 'dark:text-white dark:bg-slate-800 dark:border-slate-700/60 text-slate-900 bg-white shadow-sm border border-slate-200 font-semibold'
+                    : 'dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/40 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
                 {isActive && (
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 mr-1.5 animate-pulse align-middle" />
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-500 mr-1.5 animate-pulse align-middle" />
                 )}
                 {item.name}
               </a>
@@ -159,7 +159,7 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="md:hidden p-2 rounded-full dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             aria-expanded={mobileMenuOpen}
             aria-label="Toggle navigation menu"
             id="nav-mobile-toggle"
@@ -172,7 +172,7 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-x-4 top-20 p-4 rounded-2xl bg-[#0b0f17]/95 backdrop-blur-xl border border-slate-800 shadow-2xl flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-4 duration-200"
+          className="md:hidden fixed inset-x-4 top-20 p-4 rounded-2xl dark:bg-[#0b0f17]/95 dark:border-slate-800 bg-white/95 border border-slate-200 shadow-2xl flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-4 duration-200 backdrop-blur-xl"
           id="mobile-nav-menu"
         >
           {navItems.map((item) => {
@@ -187,17 +187,17 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
                 }}
                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between ${
                   isActive
-                    ? 'text-cyan-400 bg-cyan-950/40 border border-cyan-800/40'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                    ? 'dark:text-cyan-400 dark:bg-cyan-950/40 dark:border-cyan-800/40 text-cyan-800 bg-cyan-50 border border-cyan-200 font-semibold'
+                    : 'dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/50 text-slate-700 hover:text-slate-950 hover:bg-slate-100'
                 }`}
               >
                 <span>{item.name}</span>
-                {isActive && <span className="w-2 h-2 rounded-full bg-cyan-400" />}
+                {isActive && <span className="w-2 h-2 rounded-full bg-cyan-500" />}
               </a>
             );
           })}
 
-          <div className="pt-2 mt-1 border-t border-slate-800">
+          <div className="pt-2 mt-1 border-t dark:border-slate-800 border-slate-200">
             <button
               type="button"
               onClick={handleGetStarted}
