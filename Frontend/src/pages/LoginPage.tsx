@@ -143,53 +143,6 @@ export const LoginPage: React.FC = () => {
             </div>
           )}
 
-          {/* Quick Demo Accounts Helper */}
-          <div className="mb-5 p-3 rounded-2xl bg-cyan-950/25 border border-cyan-800/40 text-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-mono font-semibold text-cyan-300 flex items-center gap-1.5 text-[11px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                Quick Dev Accounts
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">Click to fill</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('demo@testforge.ai');
-                  setPassword('TestForge@123');
-                  setErrors({});
-                  setAuthError(null);
-                }}
-                className="p-2 rounded-xl bg-[#060913] hover:bg-cyan-950/40 border border-slate-800/80 hover:border-cyan-700/60 text-left transition-all group cursor-pointer"
-              >
-                <div className="text-[11px] font-medium text-slate-200 group-hover:text-cyan-300">
-                  Demo User
-                </div>
-                <div className="text-[10px] font-mono text-slate-400 truncate">
-                  demo@testforge.ai
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('student@testforge.ai');
-                  setPassword('Student@123');
-                  setErrors({});
-                  setAuthError(null);
-                }}
-                className="p-2 rounded-xl bg-[#060913] hover:bg-cyan-950/40 border border-slate-800/80 hover:border-cyan-700/60 text-left transition-all group cursor-pointer"
-              >
-                <div className="text-[11px] font-medium text-slate-200 group-hover:text-cyan-300">
-                  Student User
-                </div>
-                <div className="text-[10px] font-mono text-slate-400 truncate">
-                  student@testforge.ai
-                </div>
-              </button>
-            </div>
-          </div>
-
           <form onSubmit={handleSubmit} noValidate className="space-y-4 text-left">
               {/* Email Field */}
               <div>

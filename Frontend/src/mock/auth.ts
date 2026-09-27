@@ -52,7 +52,7 @@ export async function mockLogin(email: string, password: string): Promise<User> 
   );
 
   if (!matched) {
-    throw new Error('Invalid email or password. Use demo@testforge.ai or student@testforge.ai');
+    throw new Error('Invalid email or password.');
   }
 
   const user: User = {
@@ -106,7 +106,6 @@ export async function mockRegister(
     role: newAcc.role,
   };
 
-  storeUser(user);
   return user;
 }
 

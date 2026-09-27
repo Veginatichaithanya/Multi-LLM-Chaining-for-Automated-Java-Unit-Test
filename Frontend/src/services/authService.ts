@@ -89,16 +89,14 @@ export const authService = {
    */
   async register(email: string, password: string, name: string, role?: string): Promise<User> {
     try {
-      const { access_token, user: userOut } = await api.post<TokenResponse>(
+      const { user: userOut } = await api.post<TokenResponse>(
         '/auth/register',
         { email, password, name, role },
         false,
       );
 
-      storeToken(access_token);
-      const user = toUser(userOut);
-      storeUser(user);
-      return user;
+      // Do NOT auto-login; user will manually enter their credentials on the login page
+      return toUser(userOut);
     } catch (err) {
       if (err instanceof ApiError && err.status === 0) {
         console.warn('[authService] Backend unreachable — using dev mock registration');

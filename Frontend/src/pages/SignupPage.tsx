@@ -83,7 +83,7 @@ export const SignupPage: React.FC = () => {
       await register(email, password, fullName, 'Developer');
       navigate('/login', {
         state: {
-          successMessage: 'Account created successfully! You can now sign in.',
+          successMessage: 'Account created successfully! Please enter your password to sign in.',
           prefillEmail: email,
         },
       });

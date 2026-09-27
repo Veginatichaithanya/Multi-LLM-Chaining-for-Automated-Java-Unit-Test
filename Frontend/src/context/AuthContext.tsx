@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const newUser = await authService.register(email, password, name, role);
-      setUser(newUser);
+      // Do not setUser here: user will enter credentials on the login page
       return newUser;
     } finally {
       setIsLoading(false);
