@@ -25,8 +25,9 @@ export const Features: React.FC = () => {
       description: 'Generate initial JUnit 5 tests from Java source code.',
       details: 'Ingests Java method signatures, branching conditions, and class dependencies to synthesize clean JUnit 5 test cases.',
       icon: Cpu,
-      iconColor: 'text-cyan-400',
-      badgeColor: 'border-cyan-800/60 bg-cyan-950/40 text-cyan-300',
+      iconColor: 'text-cyan-600 dark:text-cyan-400',
+      iconBoxColor: 'bg-cyan-50 text-cyan-600 border-cyan-200 dark:bg-cyan-950/60 dark:text-cyan-400 dark:border-cyan-800/60',
+      badgeColor: 'border-cyan-200 dark:border-cyan-800/60 bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 font-semibold',
       technicalSpecs: {
         input: 'Parsed Java Class AST & Method Contracts',
         gateCriteria: 'Valid JUnit 5 method signatures and non-empty assertions',
@@ -41,8 +42,9 @@ export const Features: React.FC = () => {
       description: 'Reject or refine tests that fail compilation.',
       details: 'Catches missing imports, hallucinated method invocations, and type mismatches before tests are ever accepted into the suite.',
       icon: TerminalSquare,
-      iconColor: 'text-blue-400',
-      badgeColor: 'border-blue-800/60 bg-blue-950/40 text-blue-300',
+      iconColor: 'text-indigo-600 dark:text-indigo-400',
+      iconBoxColor: 'bg-indigo-50 text-indigo-600 border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-400 dark:border-indigo-800/60',
+      badgeColor: 'border-indigo-200 dark:border-indigo-800/60 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold',
       technicalSpecs: {
         input: 'Candidate TestSuite.java + Project Classpath',
         gateCriteria: 'Zero javac compiler errors and symbol resolution faults',
@@ -57,8 +59,9 @@ export const Features: React.FC = () => {
       description: 'Run generated tests through the Java test environment.',
       details: 'Executes candidate tests against the real JVM runtime to differentiate passing tests from software failures and runtime exceptions.',
       icon: PlaySquare,
-      iconColor: 'text-amber-400',
-      badgeColor: 'border-amber-800/60 bg-amber-950/40 text-amber-300',
+      iconColor: 'text-amber-600 dark:text-amber-400',
+      iconBoxColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-400 dark:border-amber-800/60',
+      badgeColor: 'border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-semibold',
       technicalSpecs: {
         input: 'Compiled Test.class + Sandboxed JVM Environment',
         gateCriteria: 'Execution without uncaught runtime crash or fatal errors',
@@ -73,8 +76,9 @@ export const Features: React.FC = () => {
       description: 'Measure actual coverage using JaCoCo.',
       details: 'Records bytecode, line, branch, and instruction coverage to provide an objective, empirical map of unexecuted code paths.',
       icon: BarChart3,
-      iconColor: 'text-emerald-400',
-      badgeColor: 'border-emerald-800/60 bg-emerald-950/40 text-emerald-300',
+      iconColor: 'text-emerald-600 dark:text-emerald-400',
+      iconBoxColor: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800/60',
+      badgeColor: 'border-emerald-200 dark:border-emerald-800/60 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold',
       technicalSpecs: {
         input: 'JaCoCo runtime execution data (jacoco.exec)',
         gateCriteria: 'Extraction of branch offsets with 0 hit-counts',
@@ -89,8 +93,9 @@ export const Features: React.FC = () => {
       description: 'Use test failures and coverage gaps to guide further generation.',
       details: 'Extracts exact diagnostic traces and missing branch offsets to prompt a second LLM for targeted test repair and expansion.',
       icon: Repeat,
-      iconColor: 'text-teal-400',
-      badgeColor: 'border-teal-800/60 bg-teal-950/40 text-teal-300',
+      iconColor: 'text-teal-600 dark:text-teal-400',
+      iconBoxColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/60 dark:text-teal-400 dark:border-teal-800/60',
+      badgeColor: 'border-teal-200 dark:border-teal-800/60 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-semibold',
       technicalSpecs: {
         input: 'Execution stack traces + Uncovered branch bytecode telemetry',
         gateCriteria: 'Targeted prompt formulation focusing on missing pathways',
@@ -105,8 +110,9 @@ export const Features: React.FC = () => {
       description: 'Compare single-LLM generation against multi-LLM chaining.',
       details: 'Designed as an empirical research platform to evaluate whether chaining models yields higher compilation success and coverage.',
       icon: Scale,
-      iconColor: 'text-purple-400',
-      badgeColor: 'border-purple-800/60 bg-purple-950/40 text-purple-300',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBoxColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-400 dark:border-purple-800/60',
+      badgeColor: 'border-purple-200 dark:border-purple-800/60 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-semibold',
       technicalSpecs: {
         input: 'Single-LLM metrics vs Multi-LLM chained metrics',
         gateCriteria: 'Statistically controlled evaluation across identical classes',
@@ -121,27 +127,27 @@ export const Features: React.FC = () => {
   };
 
   return (
-    <section className="py-20 sm:py-28 px-4 bg-[#06080e] relative overflow-hidden" id="features">
+    <section className="py-20 sm:py-28 px-4 bg-slate-50/30 dark:bg-[#06080e] relative overflow-hidden" id="features">
       {/* Background Subtle Ambience */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-cyan-950/10 blur-3xl pointer-events-none rounded-full" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-cyan-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold">
             <Workflow className="w-3.5 h-3.5" />
             <span>VALIDATION PIPELINE</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             One Pipeline. Multiple Validation Stages.
           </h2>
-          <p className="mt-4 text-slate-400 text-sm sm:text-base leading-relaxed">
+          <p className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
             Every generated test undergoes a rigorous pipeline of compilation checking, execution verification, coverage measurement, and iterative multi-LLM refinement.
           </p>
 
-          <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono text-slate-500">
+          <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
             <span>Click any stage card to inspect deep technical specifications</span>
-            <ExternalLink className="w-3 h-3 text-cyan-400" />
+            <ExternalLink className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
           </div>
         </div>
 

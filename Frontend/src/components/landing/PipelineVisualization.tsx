@@ -19,6 +19,7 @@ interface StageInfo {
   icon: React.ComponentType<{ className?: string }>;
   tag: string;
   tagColor: string;
+  iconColor: string;
   detail: string;
   codeSnippet: string;
 }
@@ -31,7 +32,8 @@ const pipelineStages: StageInfo[] = [
     sublabel: 'AST Parsing & Method Extraction',
     icon: FileCode2,
     tag: 'INPUT',
-    tagColor: 'text-blue-400 bg-blue-950/60 border-blue-800/60',
+    tagColor: 'dark:text-blue-400 dark:bg-blue-950/60 dark:border-blue-800/60 bg-blue-50 text-blue-700 border-blue-200 font-semibold',
+    iconColor: 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/60 dark:text-blue-400 dark:border-blue-800/60',
     detail: 'Parses PaymentService.java, extracts class signature, method parameters, and branching conditions.',
     codeSnippet: `public class PaymentService {
     public PaymentReceipt process(PaymentRequest req) {
@@ -54,7 +56,8 @@ const pipelineStages: StageInfo[] = [
     sublabel: 'Initial Unit Test Generation',
     icon: Sparkles,
     tag: 'LLM 1',
-    tagColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-800/60',
+    tagColor: 'dark:text-cyan-400 dark:bg-cyan-950/60 dark:border-cyan-800/60 bg-cyan-50 text-cyan-700 border-cyan-200 font-semibold',
+    iconColor: 'bg-cyan-50 text-cyan-600 border-cyan-200 dark:bg-cyan-950/60 dark:text-cyan-400 dark:border-cyan-800/60',
     detail: 'Synthesizes foundational JUnit 5 test cases covering standard happy paths and basic validation.',
     codeSnippet: `@Test
 @DisplayName("Should reject payment when amount is zero or negative")
@@ -72,7 +75,8 @@ void testProcess_InvalidAmount() {
     sublabel: 'Compile & Runtime Verification',
     icon: PlayCircle,
     tag: 'TEST RUNNER',
-    tagColor: 'text-amber-400 bg-amber-950/60 border-amber-800/60',
+    tagColor: 'dark:text-amber-400 dark:bg-amber-950/60 dark:border-amber-800/60 bg-amber-50 text-amber-800 border-amber-200 font-semibold',
+    iconColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-400 dark:border-amber-800/60',
     detail: 'Executes generated tests in an isolated sandbox. Validates mock dependencies and assertion results.',
     codeSnippet: `[INFO] --- maven-surefire-plugin:3.2.5:test ---
 [INFO] Running com.forge.PaymentServiceTest
@@ -87,7 +91,8 @@ void testProcess_InvalidAmount() {
     sublabel: 'Bytecode Coverage Profiling',
     icon: Activity,
     tag: 'METRICS',
-    tagColor: 'text-emerald-400 bg-emerald-950/60 border-emerald-800/60',
+    tagColor: 'dark:text-emerald-400 dark:bg-emerald-950/60 dark:border-emerald-800/60 bg-emerald-50 text-emerald-700 border-emerald-200 font-semibold',
+    iconColor: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800/60',
     detail: 'Analyzes bytecodes to map missed branches and uncover unexecuted error pathways.',
     codeSnippet: `[JACOCO COVERAGE ANALYSIS]
 Instruction Coverage : 78.4%
@@ -103,7 +108,8 @@ Uncovered Targets    :
     sublabel: 'Coverage-Gap Guided Prompting',
     icon: GitMerge,
     tag: 'LLM 2',
-    tagColor: 'text-purple-400 bg-purple-950/60 border-purple-800/60',
+    tagColor: 'dark:text-purple-400 dark:bg-purple-950/60 dark:border-purple-800/60 bg-purple-50 text-purple-700 border-purple-200 font-semibold',
+    iconColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-400 dark:border-purple-800/60',
     detail: 'Ingests compiler diagnostic + JaCoCo coverage gap report to craft targeted edge-case unit tests.',
     codeSnippet: `// LLM 2 Refinement Prompt Context:
 // Missing branch: isFraudFlagged() == true
@@ -123,7 +129,8 @@ void testProcess_FraudFlagged() {
     sublabel: 'Validated JUnit 5 Suite',
     icon: CheckCircle2,
     tag: 'VERIFIED',
-    tagColor: 'text-teal-400 bg-teal-950/60 border-teal-800/60',
+    tagColor: 'dark:text-teal-400 dark:bg-teal-950/60 dark:border-teal-800/60 bg-teal-50 text-teal-700 border-teal-200 font-semibold',
+    iconColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/60 dark:text-teal-400 dark:border-teal-800/60',
     detail: 'Final suite with full compilation pass, zero hallucinated methods, and complete branch validation.',
     codeSnippet: `[BUILD SUCCESS]
 [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
@@ -216,33 +223,33 @@ export const PipelineVisualization: React.FC = () => {
   const codeLines = currentStage.codeSnippet.split('\n');
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10 rounded-2xl bg-[#090d16]/95 border border-slate-800/90 shadow-2xl shadow-cyan-950/30 overflow-hidden text-left">
+    <div className="w-full max-w-5xl mx-auto mt-10 rounded-2xl bg-white dark:bg-[#090d16]/95 border border-slate-200 dark:border-slate-800/90 shadow-2xl shadow-slate-200/60 dark:shadow-cyan-950/30 overflow-hidden text-left">
       {/* Top IDE Window Header */}
-      <div className="px-4 py-3 bg-[#0c121e] border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="px-4 py-3 bg-slate-100/90 dark:bg-[#0c121e] border-b border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-red-500/80" />
+            <div className="w-3 h-3 rounded-full bg-rose-500/80" />
             <div className="w-3 h-3 rounded-full bg-amber-500/80" />
             <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
           </div>
-          <div className="h-4 w-px bg-slate-800 mx-1 hidden sm:block" />
-          <div className="flex items-center gap-2 text-slate-300 font-mono font-medium">
-            <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-            <span>testforge-pipeline</span>
-            <span className="text-slate-600">/</span>
-            <span className="text-slate-400">PaymentService.java</span>
+          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
+          <div className="flex items-center gap-2 text-slate-800 dark:text-slate-300 font-mono font-medium">
+            <Terminal className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span className="font-bold">testforge-pipeline</span>
+            <span className="text-slate-400 dark:text-slate-600">/</span>
+            <span className="text-slate-600 dark:text-slate-400">PaymentService.java</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 font-mono">
-          <span className="px-2 py-0.5 rounded-full bg-cyan-950/70 border border-cyan-800/60 text-cyan-300 text-[11px] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <span className="px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/70 border border-cyan-200 dark:border-cyan-800/60 text-cyan-700 dark:text-cyan-300 text-[11px] font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
             ACTIVE STAGE {activeStageIndex + 1}/{pipelineStages.length}
           </span>
           <button
             type="button"
             onClick={() => setAutoPlay(!autoPlay)}
-            className="px-2 py-0.5 text-[11px] text-slate-400 hover:text-slate-200 border border-slate-800 rounded bg-slate-900/60 transition-colors"
+            className="px-2.5 py-0.5 text-[11px] text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900/60 transition-colors shadow-xs"
           >
             {autoPlay ? 'Pause Flow' : 'Auto Flow'}
           </button>
@@ -252,10 +259,10 @@ export const PipelineVisualization: React.FC = () => {
       {/* Main Pipeline Interface Body */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
         {/* Left Column: Interactive Stages Node Tree */}
-        <div className="lg:col-span-5 p-4 sm:p-5 border-b lg:border-b-0 lg:border-r border-slate-800/80 bg-[#080c14]/60">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-3 flex items-center justify-between">
+        <div className="lg:col-span-5 p-4 sm:p-5 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-[#080c14]/60">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold mb-3 flex items-center justify-between">
             <span>Multi-LLM Chaining Stages</span>
-            <span className="text-slate-400">Click stage to inspect</span>
+            <span className="text-slate-500 dark:text-slate-400">Click stage to inspect</span>
           </div>
 
           <div className="space-y-2 relative">
@@ -276,16 +283,16 @@ export const PipelineVisualization: React.FC = () => {
                   }}
                   className={`w-full text-left p-2.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative z-10 ${
                     isSelected
-                      ? 'bg-slate-800/90 border-cyan-500/60 shadow-lg shadow-cyan-950/40 translate-x-1'
-                      : 'bg-[#0c121e]/70 border-slate-800/60 hover:bg-slate-800/40 hover:border-slate-700/60'
+                      ? 'bg-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1'
+                      : 'bg-white/80 dark:bg-[#0c121e]/70 border-slate-200 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700/60 shadow-xs'
                   }`}
                 >
                   {/* Step Number & Icon */}
                   <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-xs font-mono font-bold transition-colors ${
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-xs font-mono font-bold transition-colors border ${
                       isSelected
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                        : 'bg-slate-900 text-slate-400 border border-slate-800'
+                        ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border-cyan-500/50'
+                        : stage.iconColor
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -293,20 +300,20 @@ export const PipelineVisualization: React.FC = () => {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
-                      <span className={`text-xs font-semibold truncate ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                      <span className={`text-xs font-bold truncate ${isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
                         {stage.label}
                       </span>
                       <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border shrink-0 ${stage.tagColor}`}>
                         {stage.tag}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400 truncate">
+                    <p className={`text-[11px] truncate ${isSelected ? 'text-slate-600 dark:text-slate-300' : 'text-slate-500 dark:text-slate-400'}`}>
                       {stage.sublabel}
                     </p>
                   </div>
 
                   {isSelected && (
-                    <ChevronRight className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                   )}
                 </button>
               );

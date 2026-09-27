@@ -13,8 +13,9 @@ export const HowItWorks: React.FC = () => {
       detail: 'Parses Abstract Syntax Trees (AST) using JavaParser to inspect control flows, exception signatures, and conditional branch targets.',
       icon: Search,
       badge: 'Static Code Analysis',
-      badgeColor: 'text-blue-400 border-blue-800/60 bg-blue-950/40',
-      iconColor: 'text-blue-400',
+      badgeColor: 'border-blue-200 dark:border-blue-800/60 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-semibold',
+      iconBoxColor: 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/60 dark:text-blue-400 dark:border-blue-800/60',
+      iconColor: 'text-blue-600 dark:text-blue-400',
     },
     {
       step: '02',
@@ -23,8 +24,9 @@ export const HowItWorks: React.FC = () => {
       detail: 'Injects class context and method contracts into Gemini 1.5 Pro to generate syntactically complete JUnit 5 test cases with realistic assertions.',
       icon: Sparkles,
       badge: 'Initial Synthesis',
-      badgeColor: 'text-cyan-400 border-cyan-800/60 bg-cyan-950/40',
-      iconColor: 'text-cyan-400',
+      badgeColor: 'border-cyan-200 dark:border-cyan-800/60 bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 font-semibold',
+      iconBoxColor: 'bg-cyan-50 text-cyan-600 border-cyan-200 dark:bg-cyan-950/60 dark:text-cyan-400 dark:border-cyan-800/60',
+      iconColor: 'text-cyan-600 dark:text-cyan-400',
     },
     {
       step: '03',
@@ -33,8 +35,9 @@ export const HowItWorks: React.FC = () => {
       detail: 'Runs isolated Maven Surefire test passes, catching compilation faults and runtime failures while recording JaCoCo line & branch metrics.',
       icon: CheckSquare,
       badge: 'Real Execution',
-      badgeColor: 'text-amber-400 border-amber-800/60 bg-amber-950/40',
-      iconColor: 'text-amber-400',
+      badgeColor: 'border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-semibold',
+      iconBoxColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-400 dark:border-amber-800/60',
+      iconColor: 'text-amber-600 dark:text-amber-400',
     },
     {
       step: '04',
@@ -43,27 +46,28 @@ export const HowItWorks: React.FC = () => {
       detail: 'Feeds compiler error logs, assertion tracebacks, and uncovered branch offsets into OpenAI for targeted test healing and gap elimination.',
       icon: RefreshCw,
       badge: 'Iterative Chaining',
-      badgeColor: 'text-teal-400 border-teal-800/60 bg-teal-950/40',
-      iconColor: 'text-teal-400',
+      badgeColor: 'border-teal-200 dark:border-teal-800/60 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-semibold',
+      iconBoxColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/60 dark:text-teal-400 dark:border-teal-800/60',
+      iconColor: 'text-teal-600 dark:text-teal-400',
     },
   ];
 
   return (
-    <section className="py-20 sm:py-28 px-4 relative bg-[#070a10] overflow-hidden" id="how-it-works">
+    <section className="py-20 sm:py-28 px-4 relative bg-slate-50/50 dark:bg-[#070a10] border-t border-slate-200/80 dark:border-slate-800/80 overflow-hidden" id="how-it-works">
       {/* Background ambient radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[450px] bg-cyan-950/15 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-cyan-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold">
             <Layers className="w-3.5 h-3.5" />
             <span>PIPELINE ARCHITECTURE</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             From Java Source to Validated Tests
           </h2>
-          <p className="mt-4 text-slate-400 text-sm sm:text-base leading-relaxed">
+          <p className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
             A structured 4-stage pipeline combining static analysis, LLM generation, real compiler execution, and iterative gap-driven refinement.
           </p>
         </div>
@@ -72,9 +76,9 @@ export const HowItWorks: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Stage Navigation & Live Indicator */}
           <div className="lg:col-span-5 space-y-3">
-            <div className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <div className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
               <span>Pipeline Stages Overview</span>
-              <span className="text-cyan-400 flex items-center gap-1 text-[11px]">
+              <span className="text-cyan-600 dark:text-cyan-400 flex items-center gap-1 text-[11px] font-semibold">
                 <MousePointerClick className="w-3.5 h-3.5" />
                 Hover to pause • Click to swap
               </span>
@@ -89,15 +93,15 @@ export const HowItWorks: React.FC = () => {
                     key={step.step}
                     className={`p-3.5 rounded-xl border transition-all duration-300 flex items-center gap-3.5 ${
                       isCurrent
-                        ? 'bg-[#0d1320] border-cyan-500/70 shadow-lg shadow-cyan-950/30 translate-x-1.5'
-                        : 'bg-[#090d16]/70 border-slate-800/80 hover:bg-slate-800/40 hover:border-slate-700'
+                        ? 'bg-white dark:bg-[#0d1320] border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1.5'
+                        : 'bg-white/80 dark:bg-[#090d16]/70 border-slate-200 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
                     }`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 font-mono font-bold text-xs transition-colors ${
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 font-mono font-bold text-xs transition-colors border ${
                         isCurrent
-                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                          : 'bg-slate-900 text-slate-500 border border-slate-800'
+                          ? 'bg-cyan-50 text-cyan-600 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-500/40'
+                          : 'bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800'
                       }`}
                     >
                       {step.step}
@@ -105,20 +109,20 @@ export const HowItWorks: React.FC = () => {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h4 className={`text-sm font-bold truncate ${isCurrent ? 'text-white' : 'text-slate-300'}`}>
+                        <h4 className={`text-sm font-bold truncate ${isCurrent ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
                           {step.title}
                         </h4>
                         <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${step.badgeColor}`}>
                           {step.badge}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 truncate mt-0.5">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
                         {step.description}
                       </p>
                     </div>
 
                     <div className="shrink-0 text-slate-500">
-                      <Icon className={`w-4 h-4 ${isCurrent ? step.iconColor : 'text-slate-600'}`} />
+                      <Icon className={`w-4 h-4 ${isCurrent ? step.iconColor : 'text-slate-400 dark:text-slate-600'}`} />
                     </div>
                   </div>
                 );
@@ -128,7 +132,7 @@ export const HowItWorks: React.FC = () => {
             {/* Stage Counter Footnote */}
             <div className="pt-2 text-[11px] font-mono text-slate-500 flex items-center justify-between">
               <span>Automatic card swap cycle: 4.0s</span>
-              <span className="text-cyan-400/80 font-semibold">STAGE 0{activeStage + 1} OF 04 ACTIVE</span>
+              <span className="text-cyan-600 dark:text-cyan-400/80 font-semibold">STAGE 0{activeStage + 1} OF 04 ACTIVE</span>
             </div>
           </div>
 
@@ -153,14 +157,14 @@ export const HowItWorks: React.FC = () => {
                     return (
                       <Card
                         key={item.step}
-                        className="bg-[#0b0f17] border border-slate-800/90 p-6 sm:p-7 shadow-2xl shadow-cyan-950/40 hover:border-cyan-500/60 transition-colors group"
+                        className="bg-white dark:bg-[#0b0f17] border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-7 shadow-xl shadow-slate-200/60 dark:shadow-2xl dark:shadow-cyan-950/40 hover:border-cyan-500/60 transition-colors group"
                       >
                         {/* Top: Large stage number (left) & Stage icon (right) */}
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-3xl font-black text-slate-700 group-hover:text-cyan-400/80 transition-colors">
+                          <span className="font-mono text-3xl font-black text-cyan-600/80 dark:text-slate-700 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                             {item.step}
                           </span>
-                          <div className="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-700/60 transition-all shadow-sm">
+                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all shadow-xs border ${item.iconBoxColor}`}>
                             <Icon className="w-5 h-5" />
                           </div>
                         </div>
@@ -175,25 +179,25 @@ export const HowItWorks: React.FC = () => {
                           </div>
 
                           {/* Then: Stage title */}
-                          <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
                             {item.title}
                           </h3>
 
                           {/* Then: Short description */}
-                          <p className="text-sm font-semibold text-slate-200 leading-snug mb-3">
+                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-snug mb-3">
                             {item.description}
                           </p>
 
                           {/* Then: Detailed explanation */}
-                          <p className="text-xs text-slate-400 leading-relaxed">
+                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                             {item.detail}
                           </p>
                         </div>
 
                         {/* Bottom: STAGE X OF 4 indicator & Arrow */}
-                        <div className="pt-4 border-t border-slate-900 flex items-center justify-between text-xs font-mono text-slate-400">
+                        <div className="pt-4 border-t border-slate-100 dark:border-slate-900 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
                           <span className="font-semibold tracking-wider">STAGE {idx + 1} OF 4</span>
-                          <ArrowRight className="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-4 h-4 text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </Card>
                     );

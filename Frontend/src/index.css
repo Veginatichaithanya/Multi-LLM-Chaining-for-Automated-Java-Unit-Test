@@ -135,10 +135,10 @@ html.light div.bg-gradient-to-b.from-\[\#0e1422\].to-\[\#0a0d16\] {
 }
 
 /* Universal Slate 900 & 800 backgrounds with ANY opacity */
-html.light [class*="bg-slate-900"]:not(button[class*="bg-gradient"]):not(span.relative):not(span[class*="rounded-full"]):not([class*="bg-[#060910]"] *):not([class*="bg-[#03060a]"] *) {
+html.light [class*="bg-slate-900"]:not(button[class*="bg-gradient"]):not(span.relative):not(span[class*="rounded-full"]):not([class*="bg-[#060910]"] *):not([class*="bg-[#03060a]"] *):not([class*="bg-cyan"]):not([class*="bg-blue"]):not([class*="bg-amber"]):not([class*="bg-emerald"]):not([class*="bg-purple"]):not([class*="bg-teal"]):not([class*="bg-rose"]):not([class*="bg-indigo"]) {
   background-color: #f1f5f9 !important;
 }
-html.light [class*="bg-slate-800"]:not(button[class*="bg-gradient"]):not(span.relative):not(span[class*="rounded-full"]):not([class*="bg-[#060910]"] *):not([class*="bg-[#03060a]"] *) {
+html.light [class*="bg-slate-800"]:not(button[class*="bg-gradient"]):not(span.relative):not(span[class*="rounded-full"]):not([class*="bg-[#060910]"] *):not([class*="bg-[#03060a]"] *):not([class*="bg-cyan"]):not([class*="bg-blue"]):not([class*="bg-amber"]):not([class*="bg-emerald"]):not([class*="bg-purple"]):not([class*="bg-teal"]):not([class*="bg-rose"]):not([class*="bg-indigo"]) {
   background-color: #e2e8f0 !important;
 }
 
@@ -158,7 +158,7 @@ html.light div[class*="bg-[#0b0f17]"] p[class*="font-semibold"] {
   color: #1e293b !important;
 }
 html.light div[class*="bg-[#0b0f17]"] span[class*="font-mono"][class*="text-3xl"] {
-  color: #cbd5e1 !important;
+  color: #0891b2 !important;
 }
 html.light div[class*="bg-[#0b0f17]"] div[class*="border-t"] {
   border-color: #f1f5f9 !important;

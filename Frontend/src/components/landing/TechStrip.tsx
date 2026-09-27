@@ -13,12 +13,12 @@ export const TechStrip: React.FC = () => {
   ];
 
   return (
-    <section className="py-10 border-y border-slate-800/80 bg-[#080c14]/70">
+    <section className="py-10 border-y border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-[#080c14]/70">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Eyebrow Label */}
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 font-semibold uppercase tracking-widest shrink-0">
-            <span className="w-2 h-2 rounded-full bg-cyan-400/80" />
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest shrink-0">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400/80" />
             <span>BUILT AROUND</span>
           </div>
 
@@ -29,12 +29,12 @@ export const TechStrip: React.FC = () => {
               return (
                 <div
                   key={tech.name}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors shadow-sm group"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-slate-700 transition-colors shadow-xs group"
                 >
-                  <Icon className="w-3.5 h-3.5 text-cyan-400 group-hover:text-teal-300 transition-colors" />
+                  <Icon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:text-teal-500 dark:group-hover:text-teal-300 transition-colors" />
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-xs font-semibold text-slate-200">{tech.name}</span>
-                    <span className="text-[10px] font-mono text-slate-400 hidden sm:inline">{tech.role}</span>
+                    <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">{tech.name}</span>
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">{tech.role}</span>
                   </div>
                 </div>
               );

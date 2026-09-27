@@ -45,11 +45,11 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onSeeHowItWorksClick }
 
       {/* Subtle Radial Glow & Grid Background */}
       <div className="absolute inset-0 bg-dev-grid opacity-20 pointer-events-none z-0" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-radial-gradient pointer-events-none z-0" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[650px] pointer-events-none z-0 dark:bg-radial-gradient bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(6,182,212,0.20),rgba(99,102,241,0.12),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 max-w-5xl mx-auto text-center">
         {/* Small Eyebrow */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-cyan-950/50 dark:border-cyan-800/60 dark:text-cyan-300 bg-cyan-50 border-cyan-200 text-cyan-800 text-xs font-mono font-medium tracking-wide mb-6 shadow-sm shadow-cyan-950/40">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full dark:bg-cyan-950/50 dark:border-cyan-800/60 dark:text-cyan-300 bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200/80 text-cyan-800 text-xs font-mono font-medium tracking-wide mb-6 shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
           <span>AI-POWERED JAVA TESTING</span>
           <span className="dark:text-cyan-600 text-cyan-400">/</span>
@@ -59,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onSeeHowItWorksClick }
         {/* Main Heading */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight dark:text-white text-slate-900 max-w-4xl mx-auto leading-[1.15]">
           Generate{' '}
-          <span className="text-transparent bg-clip-text dark:bg-gradient-to-r dark:from-cyan-400 dark:via-teal-300 dark:to-emerald-400 bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 decoration-cyan-500 underline underline-offset-8 decoration-wavy decoration-1">
+          <span className="text-transparent bg-clip-text dark:bg-gradient-to-r dark:from-cyan-400 dark:via-teal-300 dark:to-emerald-400 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500">
             Better Java Unit Tests
           </span>
           .<br />
@@ -76,7 +76,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onSeeHowItWorksClick }
           <button
             type="button"
             onClick={onStartClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-semibold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-cyan-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 font-semibold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-cyan-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
             id="hero-primary-cta"
           >
             <span>Start Generating Tests</span>
@@ -86,10 +86,10 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onSeeHowItWorksClick }
           <button
             type="button"
             onClick={onSeeHowItWorksClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-slate-300 dark:hover:text-white dark:border-slate-700/80 bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-950 border border-slate-300 font-medium text-sm transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-slate-300 dark:hover:text-white dark:border-slate-700/80 bg-white/95 hover:bg-white text-slate-800 hover:text-slate-950 border border-slate-200/90 font-medium text-sm transition-all shadow-sm hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
             id="hero-secondary-cta"
           >
-            <Play className="w-3.5 h-3.5 fill-current text-cyan-500" />
+            <Play className="w-3.5 h-3.5 fill-current text-cyan-600" />
             <span>See How It Works</span>
           </button>
         </div>
