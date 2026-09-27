@@ -1,0 +1,41 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/html2canvas": "^0.5.35",
+    "@types/prismjs": "^1.26.6",
+    "autoprefixer": "^10.5.6",
+    "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
+    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^2.4.5",
+    "lucide-react": "^1.45.0",
+    "ogl": "^1.0.11",
+    "postcss": "^8.5.28",
+    "prismjs": "^1.30.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

@@ -1,0 +1,61 @@
+# Environment variables & secrets
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Temp files and run outputs
+temp/
+Backend/temp/
+*.tmp
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+Frontend/dist/
+Frontend/node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

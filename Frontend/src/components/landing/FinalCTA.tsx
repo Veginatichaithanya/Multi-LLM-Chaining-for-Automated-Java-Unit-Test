@@ -1,0 +1,66 @@
+import React from 'react';
+import { ArrowRight, FolderUp, CheckCircle2 } from 'lucide-react';
+
+interface FinalCTAProps {
+  onGetStartedClick: () => void;
+}
+
+export const FinalCTA: React.FC<FinalCTAProps> = ({ onGetStartedClick }) => {
+  return (
+    <section className="py-20 sm:py-28 px-4 bg-[#07090e] relative" id="get-started">
+      <div className="max-w-5xl mx-auto">
+        <div className="relative rounded-3xl bg-gradient-to-b from-[#0e1422] to-[#0a0d16] border border-slate-800 p-8 sm:p-12 md:p-16 text-center overflow-hidden shadow-2xl shadow-cyan-950/20">
+          {/* Subtle Ambient Glow */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 max-w-2xl mx-auto">
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 text-xs font-mono mb-6">
+              <FolderUp className="w-3.5 h-3.5" />
+              <span>AUTOMATED WORKFLOW READY</span>
+            </div>
+
+            {/* Heading */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              Ready to Test Your Java Project?
+            </h2>
+
+            {/* Body */}
+            <p className="mt-4 text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed">
+              Upload a Java project and explore an automated workflow for test generation, validation, coverage analysis, and refinement.
+            </p>
+
+            {/* CTA Button */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={onGetStartedClick}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-cyan-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                id="final-cta-btn"
+              >
+                <span>Get Started</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Verification Features List */}
+            <div className="mt-10 pt-8 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono text-slate-400 text-left sm:text-center">
+              <div className="flex items-center sm:justify-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>Zero Hallucinated APIs</span>
+              </div>
+              <div className="flex items-center sm:justify-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <span>Full JaCoCo Profiling</span>
+              </div>
+              <div className="flex items-center sm:justify-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                <span>JUnit 5 Native Output</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
