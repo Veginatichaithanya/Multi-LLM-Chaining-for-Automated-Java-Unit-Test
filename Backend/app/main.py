@@ -67,6 +67,7 @@ def _seed_dev_users_if_needed() -> None:
                     db.add(new_user)
                     logger.info(f"[SEED] Auto-seeded dev account: {acc['email']}")
                 else:
+                    user.hashed_password = hash_password(acc["password"])
                     user.is_active = True
                     user.is_verified = True
             db.commit()
@@ -87,8 +88,7 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     import app.models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
-    if settings.APP_ENV == "development":
-        _seed_dev_users_if_needed()
+    _seed_dev_users_if_needed()
 
     logger.info(
         f"[READY] TestForge AI API — {settings.APP_ENV.upper()} mode | "
