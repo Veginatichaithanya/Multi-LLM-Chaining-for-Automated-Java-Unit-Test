@@ -15,14 +15,17 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ onGetStartedClick }) => {
 
           <div className="relative z-10 max-w-2xl mx-auto">
             {/* Tag */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-700 dark:text-cyan-300 text-xs font-mono mb-6 font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-700 dark:text-cyan-300 text-xs font-mono mb-6 font-semibold shadow-xs">
               <FolderUp className="w-3.5 h-3.5" />
               <span>AUTOMATED WORKFLOW READY</span>
             </div>
 
             {/* Heading */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-              Ready to Test Your Java Project?
+              Ready to Test Your{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-cyan-400 dark:to-teal-300">
+                Java Project?
+              </span>
             </h2>
 
             {/* Body */}

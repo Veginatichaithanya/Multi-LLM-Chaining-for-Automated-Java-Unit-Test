@@ -141,12 +141,15 @@ Refinement loop terminates with verified test suite.`,
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold shadow-xs">
             <RefreshCw className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
             <span>CLOSED-LOOP REFINEMENT</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Tests Don't Stop at Generation.
+            Tests Don't Stop at{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 dark:from-cyan-400 dark:to-teal-300">
+              Generation.
+            </span>
           </h2>
           <p className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed">
             The pipeline validates generated tests against the real Java execution environment and uses observed failures and coverage gaps for refinement.
@@ -174,9 +177,9 @@ Refinement loop terminates with verified test suite.`,
                     <button
                       type="button"
                       onClick={() => setSelectedNode(node.id)}
-                      className={`w-full text-left p-3 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
+                      className={`w-full text-left p-3 rounded-xl border transition-all duration-200 flex items-center gap-3 cursor-pointer ${
                         isSelected
-                          ? 'bg-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-2'
+                          ? 'bg-gradient-to-r from-cyan-50/70 via-white to-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-2'
                           : 'bg-white/80 dark:bg-[#090d16]/80 border-slate-200 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
                       }`}
                     >
@@ -214,7 +217,7 @@ Refinement loop terminates with verified test suite.`,
               })}
 
               {/* Loop Return Indicator */}
-              <div className="mt-3 p-2.5 rounded-xl border border-dashed border-cyan-300 dark:border-cyan-800/60 bg-cyan-50/80 dark:bg-cyan-950/20 flex items-center justify-center gap-2 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold">
+              <div className="mt-3 p-2.5 rounded-xl border border-dashed border-cyan-300 dark:border-cyan-800/60 bg-gradient-to-r from-cyan-50/80 via-blue-50/50 to-teal-50/80 dark:bg-cyan-950/20 flex items-center justify-center gap-2 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold shadow-xs">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '8s' }} />
                 <span>Loops back to Compile & Execute until coverage criteria met</span>
               </div>
@@ -222,7 +225,10 @@ Refinement loop terminates with verified test suite.`,
           </div>
 
           {/* Right: Stage Diagnostic Inspector Panel */}
-          <div className="lg:col-span-6 rounded-2xl bg-white dark:bg-[#080c14] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-2xl flex flex-col justify-between min-h-[460px]">
+          <div className="lg:col-span-6 rounded-2xl bg-white dark:bg-[#080c14] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-2xl flex flex-col justify-between min-h-[460px] relative overflow-hidden">
+            {/* Top gradient accent line */}
+            <div className="h-[2px] w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-teal-400 -mt-5 sm:-mt-6 -mx-5 sm:-mx-6 mb-4" />
+
             <div>
               {/* Header */}
               <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">

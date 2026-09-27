@@ -223,7 +223,10 @@ export const PipelineVisualization: React.FC = () => {
   const codeLines = currentStage.codeSnippet.split('\n');
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10 rounded-2xl bg-white dark:bg-[#090d16]/95 border border-slate-200 dark:border-slate-800/90 shadow-2xl shadow-slate-200/60 dark:shadow-cyan-950/30 overflow-hidden text-left">
+    <div className="w-full max-w-5xl mx-auto mt-10 rounded-2xl bg-white dark:bg-[#090d16]/95 border border-slate-200 dark:border-slate-800/90 shadow-2xl shadow-slate-200/60 dark:shadow-cyan-950/30 overflow-hidden text-left relative">
+      {/* Top Gradient Accent Bar */}
+      <div className="h-[2.5px] w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-teal-400" />
+
       {/* Top IDE Window Header */}
       <div className="px-4 py-3 bg-slate-100/90 dark:bg-[#0c121e] border-b border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-3">
@@ -249,7 +252,7 @@ export const PipelineVisualization: React.FC = () => {
           <button
             type="button"
             onClick={() => setAutoPlay(!autoPlay)}
-            className="px-2.5 py-0.5 text-[11px] text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900/60 transition-colors shadow-xs"
+            className="px-2.5 py-0.5 text-[11px] text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900/60 transition-colors shadow-xs cursor-pointer"
           >
             {autoPlay ? 'Pause Flow' : 'Auto Flow'}
           </button>
@@ -281,9 +284,9 @@ export const PipelineVisualization: React.FC = () => {
                     setActiveStageIndex(idx);
                     setAutoPlay(false);
                   }}
-                  className={`w-full text-left p-2.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative z-10 ${
+                  className={`w-full text-left p-2.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative z-10 cursor-pointer ${
                     isSelected
-                      ? 'bg-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1'
+                      ? 'bg-gradient-to-r from-cyan-50/70 via-white to-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1'
                       : 'bg-white/80 dark:bg-[#0c121e]/70 border-slate-200 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700/60 shadow-xs'
                   }`}
                 >

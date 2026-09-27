@@ -60,12 +60,15 @@ export const HowItWorks: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold shadow-xs">
             <Layers className="w-3.5 h-3.5" />
             <span>PIPELINE ARCHITECTURE</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            From Java Source to Validated Tests
+            From Java Source to{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-cyan-400 dark:to-teal-300">
+              Validated Tests
+            </span>
           </h2>
           <p className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
             A structured 4-stage pipeline combining static analysis, LLM generation, real compiler execution, and iterative gap-driven refinement.
@@ -93,14 +96,14 @@ export const HowItWorks: React.FC = () => {
                     key={step.step}
                     className={`p-3.5 rounded-xl border transition-all duration-300 flex items-center gap-3.5 ${
                       isCurrent
-                        ? 'bg-white dark:bg-[#0d1320] border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1.5'
+                        ? 'bg-gradient-to-r from-cyan-50/70 via-white to-white dark:bg-[#0d1320] border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1.5'
                         : 'bg-white/80 dark:bg-[#090d16]/70 border-slate-200 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
                     }`}
                   >
                     <div
                       className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 font-mono font-bold text-xs transition-colors border ${
                         isCurrent
-                          ? 'bg-cyan-50 text-cyan-600 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-500/40'
+                          ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border-transparent shadow-xs shadow-cyan-500/30'
                           : 'bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800'
                       }`}
                     >
@@ -157,11 +160,14 @@ export const HowItWorks: React.FC = () => {
                     return (
                       <Card
                         key={item.step}
-                        className="bg-white dark:bg-[#0b0f17] border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-7 shadow-xl shadow-slate-200/60 dark:shadow-2xl dark:shadow-cyan-950/40 hover:border-cyan-500/60 transition-colors group"
+                        className="bg-white dark:bg-[#0b0f17] border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-7 shadow-xl shadow-slate-200/60 dark:shadow-2xl dark:shadow-cyan-950/40 hover:border-cyan-500/60 transition-colors group relative overflow-hidden"
                       >
+                        {/* Top Gradient Accent line */}
+                        <div className="h-[2px] w-full bg-gradient-to-r from-cyan-500 via-blue-500 to-teal-400 -mt-6 sm:-mt-7 -mx-6 sm:-mx-7 mb-5" />
+
                         {/* Top: Large stage number (left) & Stage icon (right) */}
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-3xl font-black text-cyan-600/80 dark:text-slate-700 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                          <span className="font-mono text-3xl font-black bg-gradient-to-br from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-400 dark:to-teal-300 bg-clip-text text-transparent group-hover:scale-105 transition-transform">
                             {item.step}
                           </span>
                           <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all shadow-xs border ${item.iconBoxColor}`}>

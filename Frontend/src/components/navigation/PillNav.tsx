@@ -111,7 +111,7 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
 
         {/* Desktop Navigation Pills */}
         <nav
-          className="hidden md:flex items-center p-1 rounded-full dark:bg-slate-900/80 dark:border-slate-800/80 bg-slate-100 border border-slate-200 shadow-inner"
+          className="hidden md:flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-full dark:bg-slate-900/80 dark:border-slate-800/80 bg-slate-100/90 border border-slate-200/90 shadow-inner"
           aria-label="Main Navigation"
         >
           {navItems.map((item) => {
@@ -124,15 +124,15 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
                   e.preventDefault();
                   handleNavClick(item.name, item.href);
                 }}
-                className={`relative px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+                className={`relative px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 select-none ${
                   isActive
-                    ? 'dark:text-white dark:bg-slate-800 dark:border-slate-700/60 text-slate-900 bg-white shadow-sm border border-slate-200 font-semibold'
-                    : 'dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/40 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+                    ? 'dark:text-white dark:bg-slate-800 dark:border-slate-700/60 text-slate-950 bg-gradient-to-r from-white via-cyan-50/80 to-blue-50/80 shadow-sm border border-cyan-200/90 font-bold ring-1 ring-cyan-400/30'
+                    : 'dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/40 text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
                 {isActive && (
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-500 mr-1.5 animate-pulse align-middle" />
+                  <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 mr-1.5 animate-pulse align-middle shadow-xs shadow-cyan-500/50" />
                 )}
                 {item.name}
               </a>
