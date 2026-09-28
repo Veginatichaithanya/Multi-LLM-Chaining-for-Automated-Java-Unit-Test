@@ -7,21 +7,22 @@ interface PillNavProps {
   onGetStartedClick?: () => void;
 }
 
+const NAV_ITEMS = [
+  { name: 'Home', href: '#' },
+  { name: 'How It Works', href: '#how-it-works' },
+  { name: 'Features', href: '#features' },
+  { name: 'Research', href: '#research' },
+  { name: 'About', href: '#about' },
+];
+
 export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const navItems = NAV_ITEMS;
 
   const [activeTab, setActiveTab] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Features', href: '#features' },
-    { name: 'Research', href: '#research' },
-    { name: 'About', href: '#about' },
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +51,8 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [location.pathname]);
+  }, [location.pathname, navItems]);
+
 
   const handleNavClick = (name: string, href: string) => {
     setActiveTab(name);

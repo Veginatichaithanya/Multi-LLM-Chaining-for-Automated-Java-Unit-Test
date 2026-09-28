@@ -14,6 +14,8 @@ import { ResultsPage } from './pages/ResultsPage';
 import { ExperimentsPage } from './pages/ExperimentsPage';
 import { NewExperimentPage } from './pages/NewExperimentPage';
 import { ExperimentDetailsPage } from './pages/ExperimentDetailsPage';
+import { ReportsPage } from './pages/ReportsPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 export function App() {
   return (
@@ -87,6 +89,22 @@ export function App() {
               element={
                 <ProtectedRoute>
                   <ExperimentDetailsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <ReportsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
                 </ProtectedRoute>
               }
             />

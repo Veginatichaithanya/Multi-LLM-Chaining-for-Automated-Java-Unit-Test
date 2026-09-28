@@ -135,20 +135,24 @@ export const ProjectDetailsPage: React.FC = () => {
       const proj = await projectApi.get(projectId);
       setProject(proj);
 
-      const srcList = await sourceApi.list(projectId);
-      setSources(srcList);
+      try {
+        const srcList = await sourceApi.list(projectId);
+        setSources(srcList);
 
-      if (srcList.length > 0) {
-        const firstSrc = await sourceApi.get(projectId, srcList[0].id);
-        setSelectedSource(firstSrc);
+        if (srcList.length > 0) {
+          const firstSrc = await sourceApi.get(projectId, srcList[0].id);
+          setSelectedSource(firstSrc);
 
-        // Try to load existing analysis for the first source file
-        try {
-          const savedAnalysis = await sourceApi.getAnalysis(projectId, firstSrc.id);
-          setPhase3Analysis(savedAnalysis);
-        } catch {
-          // No saved analysis yet; user will trigger it
+          // Try to load existing analysis for the first source file
+          try {
+            const savedAnalysis = await sourceApi.getAnalysis(projectId, firstSrc.id);
+            setPhase3Analysis(savedAnalysis);
+          } catch {
+            // No saved analysis yet; user will trigger it
+          }
         }
+      } catch {
+        setSources([]);
       }
 
       // Load existing test generations history

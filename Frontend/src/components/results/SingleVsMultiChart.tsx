@@ -43,7 +43,7 @@ const MULTI_COLOR = '#4f46e5';  // Indigo-600
 
 const FIGURE_TITLE = 'Comparison of Single-LLM and Multi-LLM Test Generation';
 const FIGURE_CAPTION =
-  'Fig. 3. Comparison of Single-LLM and Multi-LLM Test Generation based on line coverage, branch coverage, and mutation score.';
+  'Comparison of Single-LLM and Multi-LLM Test Generation based on line coverage, branch coverage, and mutation score.';
 
 interface Props {
   data: ComparisonResponse | null;
@@ -211,9 +211,6 @@ export const SingleVsMultiChart: React.FC<Props> = ({ data, loading, error }) =>
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-mono text-cyan-500 dark:text-cyan-400 uppercase tracking-wider mb-1">
-            FIG. 3
-          </p>
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             {FIGURE_TITLE}
           </h3>
@@ -261,7 +258,7 @@ export const SingleVsMultiChart: React.FC<Props> = ({ data, loading, error }) =>
                 No completed experimental data available.
               </p>
               <p className="text-slate-500 dark:text-slate-400 text-xs max-w-sm">
-                Run a Single-LLM and Multi-LLM experiment to generate Fig. 3.
+                Run a Single-LLM and Multi-LLM experiment to generate comparison data.
               </p>
             </div>
           </div>
@@ -325,7 +322,7 @@ export const SingleVsMultiChart: React.FC<Props> = ({ data, loading, error }) =>
       <ResearchFigureModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        figureNumber="Fig. 3"
+        figureNumber="Comparison"
         title={FIGURE_TITLE}
         caption={FIGURE_CAPTION}
         filename="fig3_single_vs_multi.png"

@@ -9,7 +9,7 @@
  *   - Auto-generated factual Discussion Summary based strictly on real measured values
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Loader2, FlaskConical } from 'lucide-react';
 import { projectApi } from '../../services/projectApi';
 import type { Project } from '../../services/projectApi';
@@ -75,6 +75,14 @@ export const ResultsOverview: React.FC<Props> = ({
   const [loadingExperiments, setLoadingExperiments] = useState(false);
   const [loadingRuns, setLoadingRuns] = useState(false);
 
+  // Stable refs so callbacks never need to be in dep arrays
+  const onProjectChangeRef = useRef(onProjectChange);
+  const onExperimentChangeRef = useRef(onExperimentChange);
+  const onRunChangeRef = useRef(onRunChange);
+  useEffect(() => { onProjectChangeRef.current = onProjectChange; });
+  useEffect(() => { onExperimentChangeRef.current = onExperimentChange; });
+  useEffect(() => { onRunChangeRef.current = onRunChange; });
+
   // Load projects once
   useEffect(() => {
     setLoadingProjects(true);
@@ -83,20 +91,21 @@ export const ResultsOverview: React.FC<Props> = ({
       .then((r) => {
         setProjects(r.projects);
         if (r.projects.length > 0 && !selectedProjectId) {
-          onProjectChange(r.projects[0].id);
+          onProjectChangeRef.current(r.projects[0].id);
         }
       })
       .catch(console.warn)
       .finally(() => setLoadingProjects(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Reload experiments when project changes
   useEffect(() => {
     if (!selectedProjectId) {
       setExperiments([]);
-      onExperimentChange('');
+      onExperimentChangeRef.current('');
       setRuns([]);
-      onRunChange('');
+      onRunChangeRef.current('');
       return;
     }
     setLoadingExperiments(true);
@@ -107,23 +116,23 @@ export const ResultsOverview: React.FC<Props> = ({
         if (exps.length > 0) {
           // Select first experiment if none currently selected or current not in list
           if (!selectedExperimentId || !exps.some((e) => e.id === selectedExperimentId)) {
-            onExperimentChange(exps[0].id);
+            onExperimentChangeRef.current(exps[0].id);
           }
         } else {
-          onExperimentChange('');
+          onExperimentChangeRef.current('');
           setRuns([]);
-          onRunChange('');
+          onRunChangeRef.current('');
         }
       })
       .catch(console.warn)
       .finally(() => setLoadingExperiments(false));
-  }, [selectedProjectId]);
+  }, [selectedProjectId, selectedExperimentId]);
 
   // Reload runs when experiment changes
   useEffect(() => {
     if (!selectedExperimentId) {
       setRuns([]);
-      onRunChange('');
+      onRunChangeRef.current('');
       return;
     }
     setLoadingRuns(true);
@@ -135,15 +144,15 @@ export const ResultsOverview: React.FC<Props> = ({
         if (multiRuns.length > 0) {
           if (!selectedRunId || !multiRuns.some((r) => r.id === selectedRunId)) {
             // Default to latest refinement run
-            onRunChange(multiRuns[multiRuns.length - 1].id);
+            onRunChangeRef.current(multiRuns[multiRuns.length - 1].id);
           }
         } else {
-          onRunChange('');
+          onRunChangeRef.current('');
         }
       })
       .catch(console.warn)
       .finally(() => setLoadingRuns(false));
-  }, [selectedExperimentId]);
+  }, [selectedExperimentId, selectedRunId]);
 
   const discussion = buildDiscussionSummary(comparisonData, historyData);
 

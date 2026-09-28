@@ -54,6 +54,11 @@ function hasRealToken(): boolean {
   return !!getStoredToken();
 }
 
+/** Returns true when the projectId looks like a mock seed ID. */
+function isMockId(projectId: string): boolean {
+  return projectId.startsWith('proj_mock_');
+}
+
 export const projectApi = {
   async create(payload: CreateProjectPayload): Promise<Project> {
     if (!hasRealToken()) {
@@ -92,15 +97,16 @@ export const projectApi = {
   },
 
   async get(projectId: string): Promise<Project> {
-    if (!hasRealToken()) {
-      console.warn('[projectApi] No JWT — using mock get');
+    // Always use mock service for seed IDs regardless of auth state
+    if (isMockId(projectId) || !hasRealToken()) {
+      console.warn('[projectApi] Mock ID or no JWT — using mock get');
       return mockProjectService.get(projectId);
     }
     try {
       return await api.get<Project>(`/api/projects/${projectId}`, true);
     } catch (err) {
-      if (err instanceof ApiError && (err.status === 0 || err.status === 401)) {
-        console.warn('[projectApi] Backend unreachable or unauthorized — using mock get');
+      if (err instanceof ApiError && (err.status === 0 || err.status === 401 || err.status === 404)) {
+        console.warn('[projectApi] Backend unreachable, unauthorized, or not found — using mock get');
         return mockProjectService.get(projectId);
       }
       throw err;

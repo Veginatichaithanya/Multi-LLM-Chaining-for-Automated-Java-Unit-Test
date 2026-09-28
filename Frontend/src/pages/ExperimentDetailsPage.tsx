@@ -330,6 +330,7 @@ export function ExperimentDetailsPage() {
 
   useEffect(() => { load(); }, [load]);
 
+
   // Poll while running
   useEffect(() => {
     if (!experiment) return;

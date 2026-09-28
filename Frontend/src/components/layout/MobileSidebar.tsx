@@ -23,7 +23,7 @@ interface MobileSidebarProps {
 export const MobileSidebar: React.FC<MobileSidebarProps> = ({
   isOpen,
   onClose,
-  onOpenPlaceholder,
+  onOpenPlaceholder: _onOpenPlaceholder,
 }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -47,13 +47,6 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
-
-  const handleNavClick = (title: string, desc: string, isReal: boolean) => {
-    onClose();
-    if (!isReal) {
-      onOpenPlaceholder(title, desc);
-    }
-  };
 
   const handleLogout = () => {
     onClose();
@@ -177,23 +170,35 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
               <span>Experiments</span>
             </NavLink>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('Reports', 'Review JaCoCo code coverage and JUnit test reports.', false)}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 text-left cursor-pointer"
+            <NavLink
+              to="/reports"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  isActive
+                    ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800/80'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                }`
+              }
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-4 h-4 text-cyan-400" />
               <span>Reports</span>
-            </button>
+            </NavLink>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('Settings', 'Configure API models, sandbox constraints, and credentials.', false)}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 text-left cursor-pointer"
+            <NavLink
+              to="/settings"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  isActive
+                    ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800/80'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                }`
+              }
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-4 h-4 text-cyan-400" />
               <span>Settings</span>
-            </button>
+            </NavLink>
           </nav>
         </div>
 

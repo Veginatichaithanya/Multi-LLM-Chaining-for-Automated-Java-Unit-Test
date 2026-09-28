@@ -213,9 +213,10 @@ export const CardSwap: React.FC<CardSwapProps> = ({
 
     startTimer();
 
+    const cardsToClean = cardRefs.current;
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
-      cardRefs.current.forEach((el) => {
+      cardsToClean.forEach((el) => {
         if (el) gsap.killTweensOf(el);
       });
     };

@@ -78,14 +78,16 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isCollapsed, onOpenPlace
       id: 'reports',
       label: 'Reports',
       icon: FileText,
-      isRealRoute: false,
+      isRealRoute: true,
+      path: '/reports',
       description: 'Review JaCoCo code coverage and JUnit test reports',
     },
     {
       id: 'settings',
       label: 'Settings',
       icon: Settings,
-      isRealRoute: false,
+      isRealRoute: true,
+      path: '/settings',
       description: 'Configure API models, sandbox constraints, and credentials',
     },
   ];

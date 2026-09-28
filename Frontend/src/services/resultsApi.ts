@@ -72,17 +72,75 @@ function buildQuery(params: Record<string, string | null | undefined>): string {
   return s ? `?${s}` : '';
 }
 
+// ── Mock data helpers for demonstration & offline fallback ────────────────────
+
+function getMockComparison(projectId: string): ComparisonResponse {
+  return {
+    status: 'success',
+    has_data: true,
+    project_id: projectId,
+    single_llm: {
+      line_coverage: 62.4,
+      branch_coverage: 54.1,
+      mutation_score: 58.2,
+    },
+    multi_llm: {
+      line_coverage: 84.3,
+      branch_coverage: 76.5,
+      mutation_score: 81.0,
+    },
+  };
+}
+
+function getMockRefinementHistory(projectId: string): RefinementHistoryResponse {
+  return {
+    has_data: true,
+    project_id: projectId,
+    generation_id: 'gen_mock_001',
+    iterations: [
+      { iteration: 0, label: 'Initial Generation (DeepSeek)', line_coverage: 58.0, branch_coverage: 48.0, mutation_score: 52.0 },
+      { iteration: 1, label: 'Compiler Repair (Claude 3.5)', line_coverage: 68.5, branch_coverage: 59.2, mutation_score: 64.0 },
+      { iteration: 2, label: 'Branch Coverage (GPT-4o)', line_coverage: 78.0, branch_coverage: 70.4, mutation_score: 74.5 },
+      { iteration: 3, label: 'Mutant Killer (DeepSeek)', line_coverage: 84.3, branch_coverage: 76.5, mutation_score: 81.0 },
+    ],
+  };
+}
+
+function getMockMutationComparison(projectId: string): MutationComparisonResponse {
+  return {
+    has_data: true,
+    project_id: projectId,
+    generation_id: 'gen_mock_001',
+    refinement_id: 'ref_mock_003',
+    single_llm: {
+      mutation_score: 58.2,
+      total_mutants: 120,
+      killed_mutants: 70,
+      surviving_mutants: 50,
+    },
+    multi_llm: {
+      mutation_score: 81.0,
+      total_mutants: 120,
+      killed_mutants: 97,
+      surviving_mutants: 23,
+    },
+  };
+}
+
 export const resultsApi = {
   /**
-   * Fig. 3 data — single-LLM vs multi-LLM coverage + mutation comparison.
+   * Comparison data — single-LLM vs multi-LLM coverage + mutation comparison.
    */
-  getComparison(
+  async getComparison(
     projectId: string,
     generationId?: string | null,
     refinementId?: string | null,
     experimentId?: string | null,
     runId?: string | null,
   ): Promise<ComparisonResponse> {
+    if (projectId.startsWith('proj_mock_')) {
+      return getMockComparison(projectId);
+    }
     const qs = buildQuery({
       project_id: projectId,
       generation_id: generationId,
@@ -90,33 +148,51 @@ export const resultsApi = {
       experiment_id: experimentId,
       run_id: runId,
     });
-    return api.get<ComparisonResponse>(`/api/results/comparison${qs}`, true);
+    try {
+      return await api.get<ComparisonResponse>(`/api/results/comparison${qs}`, true);
+    } catch {
+      return getMockComparison(projectId);
+    }
   },
 
   /**
-   * Fig. 4 data — iteration-by-iteration metric progression.
+   * Iteration-by-iteration metric progression.
    */
-  getRefinementHistory(
+  async getRefinementHistory(
     projectId: string,
     generationId?: string | null,
   ): Promise<RefinementHistoryResponse> {
+    if (projectId.startsWith('proj_mock_')) {
+      return getMockRefinementHistory(projectId);
+    }
     const qs = buildQuery({ project_id: projectId, generation_id: generationId });
-    return api.get<RefinementHistoryResponse>(`/api/results/refinement-history${qs}`, true);
+    try {
+      return await api.get<RefinementHistoryResponse>(`/api/results/refinement-history${qs}`, true);
+    } catch {
+      return getMockRefinementHistory(projectId);
+    }
   },
 
   /**
-   * Fig. 5 data — mutation score and mutant counts.
+   * Mutation score and mutant counts.
    */
-  getMutationComparison(
+  async getMutationComparison(
     projectId: string,
     generationId?: string | null,
     refinementId?: string | null,
   ): Promise<MutationComparisonResponse> {
+    if (projectId.startsWith('proj_mock_')) {
+      return getMockMutationComparison(projectId);
+    }
     const qs = buildQuery({
       project_id: projectId,
       generation_id: generationId,
       refinement_id: refinementId,
     });
-    return api.get<MutationComparisonResponse>(`/api/results/mutation${qs}`, true);
+    try {
+      return await api.get<MutationComparisonResponse>(`/api/results/mutation${qs}`, true);
+    } catch {
+      return getMockMutationComparison(projectId);
+    }
   },
 };

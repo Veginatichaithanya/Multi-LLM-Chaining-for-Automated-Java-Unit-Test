@@ -29,8 +29,15 @@ export const sourceApi = {
     return api.post<SourceFileWithCode>(`/api/projects/${projectId}/source`, payload, true);
   },
 
-  list(projectId: string): Promise<SourceFile[]> {
-    return api.get<SourceFile[]>(`/api/projects/${projectId}/source`, true);
+  async list(projectId: string): Promise<SourceFile[]> {
+    if (projectId.startsWith('proj_mock_')) {
+      return [];
+    }
+    try {
+      return await api.get<SourceFile[]>(`/api/projects/${projectId}/source`, true);
+    } catch {
+      return [];
+    }
   },
 
   get(projectId: string, sourceId: string): Promise<SourceFileWithCode> {

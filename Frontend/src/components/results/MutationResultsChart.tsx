@@ -215,7 +215,6 @@ export const MutationResultsChart: React.FC<Props> = ({ data, loading, error }) 
     <section className="rounded-2xl bg-[#090d16] border border-slate-800/70 p-6 space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider mb-1">Fig. 5</p>
           <h3 className="text-sm font-semibold text-slate-100">
             Mutation Score and Surviving Mutants
           </h3>
