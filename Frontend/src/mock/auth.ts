@@ -21,6 +21,12 @@ export const DEVELOPMENT_ACCOUNTS: DevAccount[] = [
     name: 'Student User',
     role: 'Research Student',
   },
+  {
+    email: 'srihariniduddekunta@gmail.com',
+    password: 'Sriharini@123',
+    name: 'Sri Harini',
+    role: 'Senior QA Architect',
+  },
 ];
 
 const STORAGE_KEY = 'testforge_auth_session';
@@ -40,8 +46,8 @@ function getMockRegisteredAccounts(): DevAccount[] {
  * Passwords are NEVER persisted to state, localStorage, or displayed in the UI.
  */
 export async function mockLogin(email: string, password: string): Promise<User> {
-  // Simulate realistic network latency for the auth check
-  await new Promise((resolve) => setTimeout(resolve, 350));
+  // Fast responsiveness for dev mock check (50ms)
+  await new Promise((resolve) => setTimeout(resolve, 50));
 
   const trimmedEmail = email.trim().toLowerCase();
   const registered = getMockRegisteredAccounts();

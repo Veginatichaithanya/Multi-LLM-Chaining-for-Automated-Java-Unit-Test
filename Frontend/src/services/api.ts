@@ -12,7 +12,21 @@
  * fall back to mock data if needed.
  */
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:8000';
+function getBaseUrl(): string {
+  const envUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  if (typeof window !== 'undefined') {
+    // Avoid Windows dual-stack IPv6 resolution delay on localhost vs 127.0.0.1
+    if (window.location.hostname === '127.0.0.1') {
+      if (!envUrl || envUrl.includes('localhost')) {
+        return 'http://127.0.0.1:8000';
+      }
+    }
+    if (window.location.hostname === 'localhost') {
+      return envUrl ?? 'http://localhost:8000';
+    }
+  }
+  return envUrl ?? 'http://localhost:8000';
+}
 
 const TOKEN_KEY = 'testforge_access_token';
 
@@ -63,6 +77,7 @@ async function request<T>(
   path: string,
   body?: unknown,
   authenticated = true,
+  timeoutMs = 5000,
 ): Promise<T> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -76,16 +91,26 @@ async function request<T>(
     }
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
   let response: Response;
   try {
-    response = await fetch(`${BASE_URL}${path}`, {
+    response = await fetch(`${getBaseUrl()}${path}`, {
       method,
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
     });
   } catch (networkError) {
-    // Backend is unreachable
-    throw new ApiError(0, 'Cannot reach the API server. Is the backend running?', networkError);
+    // Backend is unreachable or timed out
+    const isTimeout = networkError instanceof Error && networkError.name === 'AbortError';
+    const errorMsg = isTimeout
+      ? 'Connection timed out while validating credentials. Switching to offline mode.'
+      : 'Cannot reach the API server. Is the backend running?';
+    throw new ApiError(0, errorMsg, networkError);
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   if (!response.ok) {

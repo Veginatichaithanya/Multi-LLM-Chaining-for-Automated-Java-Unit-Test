@@ -27,8 +27,10 @@ connect_args = {"check_same_thread": False} if settings.is_sqlite else {}
 engine = create_engine(
     settings.DATABASE_URL,
     connect_args=connect_args,
-    echo=(settings.APP_ENV == "development"),   # Log SQL in dev
+    echo=False,                                  # Disable verbose SQL echo to eliminate terminal I/O latency
     pool_pre_ping=True,                          # Detect stale connections
+    pool_size=10,                                # Keep warm connections
+    max_overflow=20,
 )
 
 # Enable WAL mode for SQLite to allow concurrent reads during writes
