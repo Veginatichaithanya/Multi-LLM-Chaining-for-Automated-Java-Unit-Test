@@ -12,6 +12,7 @@ export const ForgotPasswordPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [resetUrl, setResetUrl] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
 
   const validate = (): boolean => {
     if (!email.trim()) {
@@ -41,6 +42,9 @@ export const ForgotPasswordPage: React.FC = () => {
       );
       if (res.reset_url) {
         setResetUrl(res.reset_url);
+      }
+      if (res.email_sent) {
+        setEmailSent(true);
       }
       setIsSuccess(true);
     } catch {
@@ -142,19 +146,33 @@ export const ForgotPasswordPage: React.FC = () => {
                 </div>
               )}
 
-              {/* ⚠️ Why You Won't Receive an Email in Your Gmail Inbox */}
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-left space-y-2">
-                <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
-                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
-                  <span>Why You Won't Receive an Email in Your Gmail Inbox</span>
+              {emailSent && (
+                <div className="p-4 rounded-2xl bg-emerald-950/70 border border-emerald-500/50 text-left space-y-2">
+                  <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-xs font-semibold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>LIVE EMAIL DISPATCHED TO GMAIL</span>
+                  </div>
+                  <p className="text-[12px] text-slate-200 leading-relaxed">
+                    A password reset email has been dispatched via Gmail SMTP to <strong className="text-white">{email}</strong>. Please check your inbox or spam folder.
+                  </p>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  <strong className="text-amber-200 font-medium">No SMTP / Email Server is Connected:</strong> In the project environment, there is no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) configured to dispatch live outbound emails to external Gmail inboxes.
-                </p>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  The platform simulates the password recovery flow securely (without leaking whether an email address exists in the database).
-                </p>
-              </div>
+              )}
+
+              {/* ⚠️ Why You Won't Receive an Email in Your Gmail Inbox (shown if not sent) */}
+              {!emailSent && (
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-left space-y-2">
+                  <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
+                    <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                    <span>Why You Won't Receive an Email in Your Gmail Inbox</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    <strong className="text-amber-200 font-medium">No SMTP / Email Server is Connected:</strong> In the project environment, there is no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) configured to dispatch live outbound emails to external Gmail inboxes.
+                  </p>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    The platform simulates the password recovery flow securely (without leaking whether an email address exists in the database).
+                  </p>
+                </div>
+              )}
 
               <div className="pt-2 flex flex-col gap-2.5">
                 <button
