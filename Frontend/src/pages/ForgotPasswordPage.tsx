@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Cpu, ArrowLeft, Mail, AlertCircle, Loader2, CheckCircle2, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Cpu, ArrowLeft, Mail, AlertCircle, Loader2, CheckCircle2, ArrowRight } from 'lucide-react';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { api } from '../services/api';
 
@@ -158,22 +158,6 @@ export const ForgotPasswordPage: React.FC = () => {
                 </div>
               )}
 
-              {/* ⚠️ Why You Won't Receive an Email in Your Gmail Inbox (shown if not sent) */}
-              {!emailSent && (
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-left space-y-2">
-                  <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
-                    <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
-                    <span>Why You Won't Receive an Email in Your Gmail Inbox</span>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    <strong className="text-amber-200 font-medium">No SMTP / Email Server is Connected:</strong> In the project environment, there is no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) configured to dispatch live outbound emails to external Gmail inboxes.
-                  </p>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    The platform simulates the password recovery flow securely (without leaking whether an email address exists in the database).
-                  </p>
-                </div>
-              )}
-
               <div className="pt-2 flex flex-col gap-2.5">
                 <button
                   type="button"
@@ -236,20 +220,6 @@ export const ForgotPasswordPage: React.FC = () => {
                     <span>{error}</span>
                   </p>
                 )}
-              </div>
-
-              {/* Notice callout about environment simulation */}
-              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-left space-y-1.5">
-                <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
-                  <span>Why You Won't Receive an Email in Your Gmail Inbox</span>
-                </div>
-                <p className="text-[11.5px] text-slate-300 leading-relaxed">
-                  <strong className="text-amber-200 font-medium">No SMTP / Email Server is Connected:</strong> In the project environment, there is no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) configured to dispatch live outbound emails to external Gmail inboxes.
-                </p>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
-                  The platform simulates the password recovery flow securely (without leaking whether an email address exists in the database).
-                </p>
               </div>
 
               {/* Submit Button */}
