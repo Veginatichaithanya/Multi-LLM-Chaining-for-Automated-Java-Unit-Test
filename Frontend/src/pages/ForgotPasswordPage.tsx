@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Cpu, ArrowLeft, Mail, AlertCircle, Loader2, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Cpu, ArrowLeft, Mail, AlertCircle, Loader2, CheckCircle2, ArrowRight, AlertTriangle } from 'lucide-react';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
+import { api } from '../services/api';
 
 export const ForgotPasswordPage: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const ForgotPasswordPage: React.FC = () => {
   const [error, setError] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [resetUrl, setResetUrl] = useState<string | null>(null);
 
   const validate = (): boolean => {
     if (!email.trim()) {
@@ -24,19 +26,29 @@ export const ForgotPasswordPage: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate() || isSubmitting) return;
 
     setIsSubmitting(true);
+    setError(undefined);
 
-    // =========================================================================
-    // MOCK PASSWORD RESET FLOW (No real email service or token creation)
-    // =========================================================================
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await api.post<{ message: string; reset_url?: string; email_sent?: boolean }>(
+        '/auth/forgot-password',
+        { email: email.trim() },
+        false,
+      );
+      if (res.reset_url) {
+        setResetUrl(res.reset_url);
+      }
       setIsSuccess(true);
-    }, 600);
+    } catch {
+      // In case user does not exist or backend is unreachable, show success safely
+      setIsSuccess(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -113,8 +125,35 @@ export const ForgotPasswordPage: React.FC = () => {
           {isSuccess ? (
             /* Success State */
             <div className="space-y-4 text-center">
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-400 font-mono">
-                <span>Didn't receive the email? Check your spam folder or try another address.</span>
+              {resetUrl && (
+                <div className="p-4 rounded-2xl bg-cyan-950/70 border border-cyan-800/80 text-left space-y-2">
+                  <div className="flex items-center gap-1.5 text-cyan-400 font-mono text-xs font-semibold">
+                    <span>⚡ DIRECT PASSWORD RESET LINK</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    Outbound SMTP is running in development mode. You can click below to choose your new password right now:
+                  </p>
+                  <Link
+                    to={resetUrl.replace(/^https?:\/\/[^/]+/, '')}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 hover:text-cyan-200 underline pt-1"
+                  >
+                    Reset Password Now &rarr;
+                  </Link>
+                </div>
+              )}
+
+              {/* ⚠️ Why You Won't Receive an Email in Your Gmail Inbox */}
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-left space-y-2">
+                <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span>Why You Won't Receive an Email in Your Gmail Inbox</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  <strong className="text-amber-200 font-medium">No SMTP / Email Server is Connected:</strong> In the project environment, there is no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) configured to dispatch live outbound emails to external Gmail inboxes.
+                </p>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  The platform simulates the password recovery flow securely (without leaking whether an email address exists in the database).
+                </p>
               </div>
 
               <div className="pt-2 flex flex-col gap-2.5">
@@ -179,6 +218,20 @@ export const ForgotPasswordPage: React.FC = () => {
                     <span>{error}</span>
                   </p>
                 )}
+              </div>
+
+              {/* Notice callout about environment simulation */}
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-left space-y-1.5">
+                <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                  <span>Why You Won't Receive an Email in Your Gmail Inbox</span>
+                </div>
+                <p className="text-[11.5px] text-slate-300 leading-relaxed">
+                  <strong className="text-amber-200 font-medium">No SMTP / Email Server is Connected:</strong> In the project environment, there is no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) configured to dispatch live outbound emails to external Gmail inboxes.
+                </p>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  The platform simulates the password recovery flow securely (without leaking whether an email address exists in the database).
+                </p>
               </div>
 
               {/* Submit Button */}

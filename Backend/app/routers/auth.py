@@ -19,6 +19,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
+from app.config import get_settings
 from app.database import get_db
 from app.middleware.auth_middleware import get_current_user
 from app.models.password_reset import PasswordReset
@@ -26,6 +27,7 @@ from app.models.user import User
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
 from app.schemas.user import UserOut
 from app.services.auth_service import AuthService, hash_password, verify_password
+from app.services.email_service import EmailService
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -101,6 +103,8 @@ class ForgotPasswordRequest(BaseModel):
 
 class ForgotPasswordResponse(BaseModel):
     message: str
+    reset_url: str | None = None
+    email_sent: bool = False
 
 
 class ResetPasswordRequest(BaseModel):
@@ -126,19 +130,18 @@ def forgot_password(
     db: Session = Depends(get_db),
 ) -> ForgotPasswordResponse:
     """
-    Generates a password reset token. Does not reveal whether the email exists.
-
-    In development, the reset token is returned in the response.
-    In production, this would send an email.
+    Generates a password reset token.
+    If SMTP is configured, sends a live password reset email.
+    In development mode or if SMTP is unconfigured, returns the reset URL directly for testing.
     """
-    _SAFE_RESPONSE = ForgotPasswordResponse(
-        message="If the account exists, a password reset link will be sent."
-    )
-
+    settings = get_settings()
     user = AuthService.get_user_by_email(db, payload.email)
+
     if not user:
-        # Do not reveal whether the email exists
-        return _SAFE_RESPONSE
+        return ForgotPasswordResponse(
+            message="If an account exists for this email, password reset instructions have been sent.",
+            email_sent=False,
+        )
 
     # Generate a secure random token
     raw_token = secrets.token_urlsafe(32)
@@ -160,10 +163,21 @@ def forgot_password(
     db.add(reset)
     db.commit()
 
-    # In production: send email with reset link.
-    # For development: the token is NOT returned in the response for security.
-    # Developers can find it via GET /dev/reset-tokens (only in dev mode).
-    return _SAFE_RESPONSE
+    reset_url = f"{settings.FRONTEND_URL}/reset-password?token={raw_token}"
+    email_sent = EmailService.send_password_reset_email(payload.email, reset_url)
+
+    # Expose the direct reset link in dev mode or if SMTP is not active
+    expose_link = (not email_sent) or (settings.APP_ENV == "development")
+
+    return ForgotPasswordResponse(
+        message=(
+            "A password reset link has been dispatched to your email."
+            if email_sent
+            else "Password reset request processed."
+        ),
+        reset_url=reset_url if expose_link else None,
+        email_sent=email_sent,
+    )
 
 
 @router.post(

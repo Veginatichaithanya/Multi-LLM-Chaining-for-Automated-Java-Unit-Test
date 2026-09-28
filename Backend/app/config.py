@@ -46,6 +46,14 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
     FRONTEND_URL: str = "http://localhost:5173"
 
+    # ── SMTP Email ────────────────────────────────────────────────────────────
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_EMAIL: str = "noreply@testforge.ai"
+    SMTP_USE_TLS: bool = True
+
     # ── App ──────────────────────────────────────────────────────────────────
     APP_ENV: str = "development"
     APP_TITLE: str = "TestForge AI API"
@@ -115,6 +123,10 @@ class Settings(BaseSettings):
     @property
     def agentrouter_configured(self) -> bool:
         return bool(self.AGENTROUTER_API_KEY.strip())
+
+    @property
+    def smtp_configured(self) -> bool:
+        return bool(self.SMTP_HOST.strip() and self.SMTP_USER.strip() and self.SMTP_PASSWORD.strip())
 
 
 @lru_cache

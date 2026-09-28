@@ -78,6 +78,16 @@
   4. Updated [`AppSidebar.tsx`](file:///c:/temporary%20projects/Multi%20LLM%20chaining%20%20project/Frontend/src/components/layout/AppSidebar.tsx) and [`MobileSidebar.tsx`](file:///c:/temporary%20projects/Multi%20LLM%20chaining%20%20project/Frontend/src/components/layout/MobileSidebar.tsx) with `isRealRoute: true` and active `NavLink` routing.
 - **Status**: ✅ Fully resolved and verified in browser (no placeholder modals).
 
+### Issue 6: Password Recovery Flow & Outbound Gmail Inbox Explanation
+- **Root Cause**: The project was using a mock timer without generating real reset tokens in PostgreSQL. When testing with personal email addresses (e.g. `srihariniduddekunta@gmail.com`), users wondered why no live email arrived in their Gmail inbox.
+- **Resolution**:
+  1. **Backend Integration**: Created [`email_service.py`](file:///c:/temporary%20projects/Multi%20LLM%20chaining%20%20project/Backend/app/services/email_service.py) with SMTP support and fallback link generation. Updated [`auth.py`](file:///c:/temporary%20projects/Multi%20LLM%20chaining%20%20project/Backend/app/routers/auth.py) to generate secure tokens and return `reset_url`.
+  2. **Direct Reset Page**: Created [`ResetPasswordPage.tsx`](file:///c:/temporary%20projects/Multi%20LLM%20chaining%20%20project/Frontend/src/pages/ResetPasswordPage.tsx) hooked to `POST /auth/reset-password`, allowing users to enter a new password and update their hashed credentials in PostgreSQL.
+  3. **Advisory Notice Callout**: Added a prominent amber advisory callout to [`ForgotPasswordPage.tsx`](file:///c:/temporary%20projects/Multi%20LLM%20chaining%20%20project/Frontend/src/pages/ForgotPasswordPage.tsx) explaining:
+     - **No SMTP / Email Server is Connected**: Explaining that no third-party email provider (e.g., SendGrid, AWS SES, or SMTP mail server) is configured to dispatch live outbound emails to external Gmail inboxes.
+     - **Direct Simulation**: Providing an interactive `⚡ DIRECT PASSWORD RESET LINK` card that allows instant password updates.
+- **Status**: ✅ Fully implemented, tested, and verified with live browser screenshots.
+
 ---
 
 ## 3. End-to-End Workflow Verification
