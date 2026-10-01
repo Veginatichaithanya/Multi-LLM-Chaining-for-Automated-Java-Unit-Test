@@ -4,7 +4,7 @@
  * Interfaces match Phase 6 backend schemas exactly.
  */
 
-import { api } from './api';
+import { api, AI_TIMEOUT_MS } from './api';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -162,6 +162,7 @@ export const experimentApi = {
       `/api/experiments/${experimentId}/run`,
       { source_id: sourceId ?? null },
       true,
+      AI_TIMEOUT_MS,
     );
   },
 

@@ -18,4 +18,29 @@ export default defineConfig({
       'html2canvas': 'html2canvas-pro',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (
+              id.includes('react') ||
+              id.includes('react-dom') ||
+              id.includes('react-router-dom')
+            ) {
+              return 'vendor-react';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('html2canvas')) {
+              return 'vendor-canvas';
+            }
+            return 'vendor-libs';
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 })

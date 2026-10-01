@@ -11,7 +11,7 @@
  */
 
 import type { User } from '../types/user';
-import { api, ApiError, storeToken, clearToken } from './api';
+import { api, ApiError, storeToken, clearToken, getBaseUrl } from './api';
 import { mockLogin as devMockLogin, mockRegister as devMockRegister, storeUser, clearStoredUser } from '../mock/auth';
 
 // ── Types mirroring backend schemas ───────────────────────────────────────────
@@ -53,16 +53,16 @@ export const authService = {
    * Authenticate with email + password.
    *
    * 1. Tries the real FastAPI backend first.
-   * 2. Falls back to the dev mock if the backend is unreachable (status 0).
-   *
-   * On success: stores the JWT + user in localStorage and returns User.
-   * On failure: throws an Error with a user-readable message.
+   * 2. If the backend is unreachable (status 0):
+   *    - Attempts dev mock for recognized development accounts.
+   *    - For all other accounts, reports that the server is unreachable/spinning up on Render.
    */
   async login(email: string, password: string): Promise<User> {
+    const cleanEmail = email.trim().toLowerCase();
     try {
       const { access_token, user: userOut } = await api.post<TokenResponse>(
         '/auth/login',
-        { email, password },
+        { email: cleanEmail, password },
         false, // public endpoint — no Bearer token needed
       );
 
@@ -72,9 +72,21 @@ export const authService = {
       return user;
     } catch (err) {
       if (err instanceof ApiError && err.status === 0) {
-        // Backend is offline — use dev mock silently
-        console.warn('[authService] Backend unreachable — using dev mock login');
-        return devMockLogin(email, password);
+        // Backend is offline / sleeping on Render
+        try {
+          const devUser = await devMockLogin(cleanEmail, password);
+          console.warn('[authService] Backend offline — logged in using local dev account credentials');
+          return devUser;
+        } catch {
+          // It wasn't a recognized local dev account. Do NOT lie to user with "Invalid credentials".
+          // Tell the user the API server is unreachable/waking up!
+          const activeUrl = getBaseUrl();
+          throw new Error(
+            `Unable to connect to TestForge backend (${activeUrl}). ` +
+            `If hosted on Render free tier, the service may be spinning up from sleep (takes ~30s). ` +
+            `Please check your connection and retry.`
+          );
+        }
       }
       // Re-throw real API errors (401, 409, 422, etc.)
       throw err;
@@ -83,15 +95,14 @@ export const authService = {
 
   /**
    * Register a new account.
-   *
-   * On success: stores the JWT + user and returns User.
-   * Falls back to a mock register if backend is unreachable.
    */
   async register(email: string, password: string, name: string, role?: string): Promise<User> {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = name.trim();
     try {
       const { user: userOut } = await api.post<TokenResponse>(
         '/auth/register',
-        { email, password, name, role },
+        { email: cleanEmail, password, name: cleanName, role },
         false,
       );
 
@@ -100,7 +111,7 @@ export const authService = {
     } catch (err) {
       if (err instanceof ApiError && err.status === 0) {
         console.warn('[authService] Backend unreachable — using dev mock registration');
-        return devMockRegister(email, password, name, role);
+        return devMockRegister(cleanEmail, password, cleanName, role);
       }
       throw err;
     }

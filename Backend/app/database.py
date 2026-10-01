@@ -24,13 +24,23 @@ settings = get_settings()
 # PostgreSQL does not need this kwarg.
 connect_args = {"check_same_thread": False} if settings.is_sqlite else {}
 
+engine_kwargs = {
+    "connect_args": connect_args,
+    "echo": False,
+    "pool_pre_ping": True,  # Detect stale connections
+}
+
+if not settings.is_sqlite:
+    # PostgreSQL pooling parameters optimized for cloud environments like Render
+    engine_kwargs.update({
+        "pool_size": 10,
+        "max_overflow": 20,
+        "pool_recycle": 300,  # Recycle connection every 5 minutes to prevent dropped Render sockets
+    })
+
 engine = create_engine(
     settings.DATABASE_URL,
-    connect_args=connect_args,
-    echo=False,                                  # Disable verbose SQL echo to eliminate terminal I/O latency
-    pool_pre_ping=True,                          # Detect stale connections
-    pool_size=10,                                # Keep warm connections
-    max_overflow=20,
+    **engine_kwargs,
 )
 
 # Enable WAL mode for SQLite to allow concurrent reads during writes

@@ -12,6 +12,11 @@ class LoginRequest(BaseModel):
     email: EmailStr = Field(..., examples=["demo@testforge.ai"])
     password: str = Field(..., min_length=6, examples=["TestForge@123"])
 
+    @field_validator("email", mode="before")
+    @classmethod
+    def _sanitize_email(cls, v: str) -> str:
+        return v.strip().lower() if isinstance(v, str) else v
+
 
 class RegisterRequest(BaseModel):
     """Body for POST /auth/register"""
@@ -34,6 +39,11 @@ class RegisterRequest(BaseModel):
         max_length=100,
         examples=["Research Student"],
     )
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def _sanitize_email(cls, v: str) -> str:
+        return v.strip().lower() if isinstance(v, str) else v
 
     @field_validator("password")
     @classmethod

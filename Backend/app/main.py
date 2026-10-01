@@ -51,6 +51,12 @@ def _seed_dev_users_if_needed() -> None:
                     "password": "Student@123",
                     "role": "Research Student",
                 },
+                {
+                    "email": "srihariniduddekunta@gmail.com",
+                    "name": "Sri Harini",
+                    "password": "Sriharini@123",
+                    "role": "Senior QA Architect",
+                },
             ]
             for acc in dev_accounts:
                 user = db.query(User).filter(User.email == acc["email"]).first()
@@ -81,14 +87,30 @@ def _seed_dev_users_if_needed() -> None:
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     """
-    Create all database tables on startup.
-    For production use Alembic migrations instead:  alembic upgrade head
+    Create all database tables on startup with resilient retry.
+    Prevents Render crash loops when managed PostgreSQL is spinning up.
     """
-    # Import models so SQLAlchemy knows about them before create_all
+    import asyncio
     import app.models  # noqa: F401
 
-    Base.metadata.create_all(bind=engine)
-    _seed_dev_users_if_needed()
+    db_ready = False
+    for attempt in range(1, 6):
+        try:
+            Base.metadata.create_all(bind=engine)
+            _seed_dev_users_if_needed()
+            db_ready = True
+            logger.info(f"[DB] Database initialized successfully on attempt {attempt}/5")
+            break
+        except Exception as exc:
+            logger.warning(
+                f"[DB] Startup connection attempt {attempt}/5 failed: {exc}. "
+                f"Retrying in 2 seconds..."
+            )
+            if attempt < 5:
+                await asyncio.sleep(2)
+
+    if not db_ready:
+        logger.error("[DB] All startup database connection attempts failed. Continuing in offline mode.")
 
     logger.info(
         f"[READY] TestForge AI API — {settings.APP_ENV.upper()} mode | "
@@ -109,10 +131,12 @@ app = FastAPI(
 )
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
+# Supports localhost, Render frontend services (*.onrender.com), Vercel (*.vercel.app),
+# Netlify (*.netlify.app), and any custom origins declared in CORS_ORIGINS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
-    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?|https://.*\.onrender\.com",
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https?://.*\.onrender\.com$|^https?://.*\.vercel\.app$|^https?://.*\.netlify\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

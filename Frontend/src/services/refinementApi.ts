@@ -9,7 +9,7 @@
  * - getGenerationRefinements()
  */
 
-import { api } from './api';
+import { api, AI_TIMEOUT_MS } from './api';
 
 export interface RefineTestsRequest {
   generation_id: string;
@@ -78,14 +78,24 @@ export const refinementApi = {
    * Run a single refinement iteration using OpenRouter / GPT-4o.
    */
   refineTests(projectId: string, payload: RefineTestsRequest): Promise<RefinementResponse> {
-    return api.post<RefinementResponse>(`/api/projects/${projectId}/refine-tests`, payload, true);
+    return api.post<RefinementResponse>(
+      `/api/projects/${projectId}/refine-tests`,
+      payload,
+      true,
+      AI_TIMEOUT_MS,
+    );
   },
 
   /**
    * Run automated multi-iteration refinement loop (1 to 5 iterations).
    */
   runRefinement(projectId: string, payload: RefineTestsRequest): Promise<RefinementRunSummary> {
-    return api.post<RefinementRunSummary>(`/api/projects/${projectId}/refine-tests/run`, payload, true);
+    return api.post<RefinementRunSummary>(
+      `/api/projects/${projectId}/refine-tests/run`,
+      payload,
+      true,
+      AI_TIMEOUT_MS,
+    );
   },
 
   /**

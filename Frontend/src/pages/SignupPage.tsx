@@ -80,7 +80,7 @@ export const SignupPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await register(email, password, fullName, 'Developer');
+      await register(email.trim().toLowerCase(), password, fullName.trim(), 'Developer');
       navigate('/login', {
         state: {
           successMessage: 'Account created successfully! Please enter your password to sign in.',

@@ -28,11 +28,22 @@ class Settings(BaseSettings):
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
-    def _resolve_sqlite_path(cls, v: str) -> str:
-        if isinstance(v, str) and v.startswith("sqlite:///./"):
+    def _resolve_database_url(cls, v: str) -> str:
+        if not isinstance(v, str):
+            return v
+        v = v.strip()
+        # Resolve SQLite relative paths
+        if v.startswith("sqlite:///./"):
             rel = v.replace("sqlite:///./", "")
             abs_p = (BACKEND_DIR / rel).resolve().as_posix()
             return f"sqlite:///{abs_p}"
+        # Normalize Render/Heroku PostgreSQL URLs to use psycopg v3 dialect
+        if v.startswith("postgres://"):
+            return "postgresql+psycopg://" + v[len("postgres://"):]
+        if v.startswith("postgresql+psycopg2://"):
+            return "postgresql+psycopg://" + v[len("postgresql+psycopg2://"):]
+        if v.startswith("postgresql://") and not v.startswith("postgresql+"):
+            return "postgresql+psycopg://" + v[len("postgresql://"):]
         return v
 
     # ── JWT ──────────────────────────────────────────────────────────────────

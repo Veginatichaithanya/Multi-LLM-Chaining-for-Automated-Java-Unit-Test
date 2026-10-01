@@ -2,7 +2,7 @@
  * generationApi.ts — Test generation API calls.
  */
 
-import { api } from './api';
+import { api, AI_TIMEOUT_MS } from './api';
 
 export interface GenerationResult {
   generation_id: string;
@@ -40,11 +40,21 @@ export interface ChainRequest {
 
 export const generationApi = {
   generate(projectId: string, payload: GenerationRequest): Promise<GenerationResult> {
-    return api.post<GenerationResult>(`/api/projects/${projectId}/generate-tests`, payload, true);
+    return api.post<GenerationResult>(
+      `/api/projects/${projectId}/generate-tests`,
+      payload,
+      true,
+      AI_TIMEOUT_MS,
+    );
   },
 
   chain(projectId: string, payload: ChainRequest): Promise<GenerationResult> {
-    return api.post<GenerationResult>(`/api/projects/${projectId}/generate-tests/chain`, payload, true);
+    return api.post<GenerationResult>(
+      `/api/projects/${projectId}/generate-tests/chain`,
+      payload,
+      true,
+      AI_TIMEOUT_MS,
+    );
   },
 
   listGenerations(projectId: string): Promise<GenerationResult[]> {

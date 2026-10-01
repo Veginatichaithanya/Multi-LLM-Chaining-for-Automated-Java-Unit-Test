@@ -1,9 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Cpu, ArrowLeft, ArrowRight, Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
+import {
+  Cpu,
+  ArrowLeft,
+  ArrowRight,
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+  AlertCircle,
+  Server,
+  RefreshCw,
+  Sliders,
+  Loader2,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
-
+import { pingApiHealth, getBaseUrl, setApiBaseUrl, getStoredApiUrl } from '../services/api';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -23,6 +37,14 @@ export const LoginPage: React.FC = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isWakingUp, setIsWakingUp] = useState(false);
+
+  // Backend health diagnostic & configuration state
+  const [apiHealth, setApiHealth] = useState<{ ok: boolean; url: string; latencyMs: number } | null>(null);
+  const [isCheckingHealth, setIsCheckingHealth] = useState(false);
+  const [showApiConfig, setShowApiConfig] = useState(false);
+  const [customUrlInput, setCustomUrlInput] = useState(getStoredApiUrl() || getBaseUrl());
+  const wakeUpTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // If already authenticated, redirect to /dashboard
   useEffect(() => {
@@ -30,6 +52,23 @@ export const LoginPage: React.FC = () => {
       navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
+  // Background API warmup probe on page load (starts spinning up sleeping Render instances)
+  const probeBackendHealth = async () => {
+    setIsCheckingHealth(true);
+    try {
+      const result = await pingApiHealth(10000);
+      setApiHealth(result);
+    } catch {
+      setApiHealth({ ok: false, url: getBaseUrl(), latencyMs: 0 });
+    } finally {
+      setIsCheckingHealth(false);
+    }
+  };
+
+  useEffect(() => {
+    probeBackendHealth();
+  }, []);
 
   // Validation logic
   const validate = (): boolean => {
@@ -57,18 +96,40 @@ export const LoginPage: React.FC = () => {
     if (!validate() || isSubmitting) return;
 
     setIsSubmitting(true);
+    setIsWakingUp(false);
+
+    // If server takes longer than 2.5 seconds (Render spin-up), inform user
+    wakeUpTimerRef.current = setTimeout(() => {
+      setIsWakingUp(true);
+    }, 2500);
 
     try {
-      await login(email, password);
+      await login(email.trim().toLowerCase(), password);
+      if (wakeUpTimerRef.current) clearTimeout(wakeUpTimerRef.current);
       navigate('/dashboard', { replace: true });
     } catch (err: unknown) {
+      if (wakeUpTimerRef.current) clearTimeout(wakeUpTimerRef.current);
       setIsSubmitting(false);
+      setIsWakingUp(false);
       if (err instanceof Error) {
         setAuthError(err.message);
       } else {
         setAuthError('Authentication failed. Please check credentials.');
       }
     }
+  };
+
+  const handleSaveApiUrl = () => {
+    setApiBaseUrl(customUrlInput);
+    setShowApiConfig(false);
+    probeBackendHealth();
+  };
+
+  const handleResetApiUrl = () => {
+    setApiBaseUrl(null);
+    setCustomUrlInput(getBaseUrl());
+    setShowApiConfig(false);
+    probeBackendHealth();
   };
 
   return (
@@ -112,7 +173,7 @@ export const LoginPage: React.FC = () => {
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md rounded-3xl bg-[#090d16]/95 border border-slate-800/90 p-7 sm:p-9 shadow-2xl shadow-cyan-950/30">
           {/* Header */}
-          <div className="text-center mb-7">
+          <div className="text-center mb-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 text-xs font-mono mb-4">
               <Lock className="w-3 h-3" />
               <span>TESTFORGE AI</span>
@@ -126,12 +187,96 @@ export const LoginPage: React.FC = () => {
             </p>
           </div>
 
+          {/* Backend Status Diagnostic Pill */}
+          <div className="mb-5 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+              <div
+                className={`w-2 h-2 rounded-full shrink-0 ${
+                  isCheckingHealth
+                    ? 'bg-amber-400 animate-ping'
+                    : apiHealth?.ok
+                    ? 'bg-emerald-400 shadow-sm shadow-emerald-400'
+                    : 'bg-rose-400'
+                }`}
+              />
+              <span className="text-slate-400 truncate text-[11px]">
+                {isCheckingHealth ? (
+                  'Probing backend...'
+                ) : apiHealth?.ok ? (
+                  <>API Online ({apiHealth.latencyMs}ms)</>
+                ) : (
+                  'Backend Offline / Waking up'
+                )}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onClick={probeBackendHealth}
+                disabled={isCheckingHealth}
+                title="Ping backend server"
+                className="p-1 hover:text-cyan-300 text-slate-400 transition-colors disabled:opacity-40"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isCheckingHealth ? 'animate-spin text-cyan-400' : ''}`} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowApiConfig(!showApiConfig)}
+                title="Configure Backend URL"
+                className="p-1 hover:text-cyan-300 text-slate-400 transition-colors"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Collapsible API URL Configurator for Render/Localhost */}
+          {showApiConfig && (
+            <div className="mb-5 p-3 rounded-xl bg-[#050810] border border-cyan-900/60 text-xs font-mono space-y-2 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between text-cyan-300 text-[11px]">
+                <span className="flex items-center gap-1 font-semibold">
+                  <Server className="w-3 h-3" /> Backend API URL
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResetApiUrl}
+                  className="text-slate-500 hover:text-slate-300 text-[10px] underline"
+                >
+                  Reset default
+                </button>
+              </div>
+              <input
+                type="text"
+                value={customUrlInput}
+                onChange={(e) => setCustomUrlInput(e.target.value)}
+                placeholder="e.g. https://my-backend.onrender.com"
+                className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-cyan-400"
+              />
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowApiConfig(false)}
+                  className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-[11px] hover:bg-slate-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveApiUrl}
+                  className="px-2.5 py-1 rounded bg-cyan-600 text-slate-950 font-bold text-[11px] hover:bg-cyan-500"
+                >
+                  Save & Connect
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Auth Error Banner */}
           {authError && (
-            <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-300 text-xs font-mono flex items-center gap-2 mb-6 animate-in fade-in duration-300 shadow-md shadow-rose-950/40">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-              <span>{authError}</span>
+            <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-300 text-xs font-mono flex items-start gap-2 mb-6 animate-in fade-in duration-300 shadow-md shadow-rose-950/40">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <div className="flex-1 leading-relaxed">{authError}</div>
             </div>
           )}
 
@@ -144,144 +289,151 @@ export const LoginPage: React.FC = () => {
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-4 text-left">
-              {/* Email Field */}
-              <div>
-                <label
-                  htmlFor="login-email"
-                  className="block text-xs font-mono font-medium text-slate-300 mb-1.5"
-                >
-                  Email
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <input
-                    id="login-email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    aria-invalid={errors.email ? 'true' : 'false'}
-                    aria-describedby={errors.email ? 'login-email-error' : undefined}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
-                      if (authError) setAuthError(null);
-                    }}
-                    placeholder="Enter your email"
-                    className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#050810] text-sm text-white placeholder-slate-500 border transition-all focus:outline-none focus:ring-1 ${
-                      errors.email
-                        ? 'border-rose-500/80 focus:ring-rose-500 focus:border-rose-500'
-                        : 'border-slate-800 hover:border-slate-700 focus:ring-cyan-400 focus:border-cyan-400'
-                    }`}
-                  />
-                </div>
-                {errors.email && (
-                  <p id="login-email-error" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1 font-mono">
-                    <AlertCircle className="w-3 h-3 shrink-0" />
-                    <span>{errors.email}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* Password Field */}
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label
-                    htmlFor="login-password"
-                    className="block text-xs font-mono font-medium text-slate-300"
-                  >
-                    Password
-                  </label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors focus:outline-none focus-visible:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    id="login-password"
-                    type={showPassword ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    value={password}
-                    aria-invalid={errors.password ? 'true' : 'false'}
-                    aria-describedby={errors.password ? 'login-password-error' : undefined}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
-                      if (authError) setAuthError(null);
-                    }}
-                    placeholder="Enter your password"
-                    className={`w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#050810] text-sm text-white placeholder-slate-500 border transition-all focus:outline-none focus:ring-1 ${
-                      errors.password
-                        ? 'border-rose-500/80 focus:ring-rose-500 focus:border-rose-500'
-                        : 'border-slate-800 hover:border-slate-700 focus:ring-cyan-400 focus:border-cyan-400'
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p id="login-password-error" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1 font-mono">
-                    <AlertCircle className="w-3 h-3 shrink-0" />
-                    <span>{errors.password}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* Remember Me Checkbox */}
-              <div className="flex items-center">
-                <label className="flex items-center gap-2.5 text-xs text-slate-400 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded bg-[#050810] border-slate-800 text-cyan-500 focus:ring-cyan-400 focus:ring-offset-0 focus:ring-offset-slate-900 cursor-pointer accent-cyan-500"
-                  />
-                  <span>Remember me</span>
-                </label>
-              </div>
-
-              {/* Sign In Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-cyan-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 disabled:opacity-50 cursor-pointer"
+            {/* Email Field */}
+            <div>
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-mono font-medium text-slate-300 mb-1.5"
               >
-                {isSubmitting ? (
-                  <span>Validating credentials...</span>
-                ) : (
-                  <>
-                    <span>Sign In</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
+                Email
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <input
+                  id="login-email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  aria-invalid={errors.email ? 'true' : 'false'}
+                  aria-describedby={errors.email ? 'login-email-error' : undefined}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+                    if (authError) setAuthError(null);
+                  }}
+                  placeholder="Enter your email"
+                  className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#050810] text-sm text-white placeholder-slate-500 border transition-all focus:outline-none focus:ring-1 ${
+                    errors.email
+                      ? 'border-rose-500/80 focus:ring-rose-500 focus:border-rose-500'
+                      : 'border-slate-800 hover:border-slate-700 focus:ring-cyan-400 focus:border-cyan-400'
+                  }`}
+                />
+              </div>
+              {errors.email && (
+                <p id="login-email-error" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1 font-mono">
+                  <AlertCircle className="w-3 h-3 shrink-0" />
+                  <span>{errors.email}</span>
+                </p>
+              )}
+            </div>
 
-              {/* Create Account Link */}
-              <div className="pt-3 text-center text-xs text-slate-400">
-                <span>Don't have an account? </span>
-                <Link
-                  to="/signup"
-                  className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors focus:outline-none focus-visible:underline"
+            {/* Password Field */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label
+                  htmlFor="login-password"
+                  className="block text-xs font-mono font-medium text-slate-300"
                 >
-                  Create an account
+                  Password
+                </label>
+                <Link
+                  to="/forgot-password"
+                  className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors focus:outline-none focus-visible:underline"
+                >
+                  Forgot password?
                 </Link>
               </div>
-            </form>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <input
+                  id="login-password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  aria-invalid={errors.password ? 'true' : 'false'}
+                  aria-describedby={errors.password ? 'login-password-error' : undefined}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+                    if (authError) setAuthError(null);
+                  }}
+                  placeholder="Enter your password"
+                  className={`w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#050810] text-sm text-white placeholder-slate-500 border transition-all focus:outline-none focus:ring-1 ${
+                    errors.password
+                      ? 'border-rose-500/80 focus:ring-rose-500 focus:border-rose-500'
+                      : 'border-slate-800 hover:border-slate-700 focus:ring-cyan-400 focus:border-cyan-400'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              {errors.password && (
+                <p id="login-password-error" className="mt-1.5 text-xs text-rose-400 flex items-center gap-1 font-mono">
+                  <AlertCircle className="w-3 h-3 shrink-0" />
+                  <span>{errors.password}</span>
+                </p>
+              )}
+            </div>
 
-          {/* Phase 1 Integration Footnote */}
+            {/* Remember Me Checkbox */}
+            <div className="flex items-center">
+              <label className="flex items-center gap-2.5 text-xs text-slate-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded bg-[#050810] border-slate-800 text-cyan-500 focus:ring-cyan-400 focus:ring-offset-0 focus:ring-offset-slate-900 cursor-pointer accent-cyan-500"
+                />
+                <span>Remember me</span>
+              </label>
+            </div>
+
+            {/* Sign In Button with Adaptive Cold-Start Feedback */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-cyan-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 disabled:opacity-75 cursor-pointer"
+            >
+              {isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-slate-950 shrink-0" />
+                  <span>
+                    {isWakingUp
+                      ? 'Waking up server (Render cold start)...'
+                      : 'Validating credentials...'}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+
+            {/* Create Account Link */}
+            <div className="pt-3 text-center text-xs text-slate-400">
+              <span>Don't have an account? </span>
+              <Link
+                to="/signup"
+                className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors focus:outline-none focus-visible:underline"
+              >
+                Create an account
+              </Link>
+            </div>
+          </form>
+
+          {/* Footnote */}
           <div className="mt-6 pt-4 border-t border-slate-800/80 text-[11px] font-mono text-slate-500 text-center">
             <span>TestForge AI • Secure Authentication</span>
           </div>
