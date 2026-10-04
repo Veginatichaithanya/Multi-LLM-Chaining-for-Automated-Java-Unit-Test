@@ -61,8 +61,22 @@ export async function mockLogin(email: string, password: string): Promise<User> 
     throw new Error('Invalid email or password.');
   }
 
+  // Generate a stable, deterministic ID from the email so the user ID
+  // stays consistent across logouts and page refreshes.
+  const stableId = (() => {
+    if (matched.email === 'demo@testforge.ai') return 'usr_demo_01';
+    if (matched.email === 'student@testforge.ai') return 'usr_student_02';
+    if (matched.email === 'srihariniduddekunta@gmail.com') return 'usr_sriharini_03';
+    // For user-registered mock accounts, derive a stable hash from the email
+    let hash = 0;
+    for (let i = 0; i < matched.email.length; i++) {
+      hash = (hash * 31 + matched.email.charCodeAt(i)) >>> 0;
+    }
+    return `usr_mock_${hash.toString(16)}`;
+  })();
+
   const user: User = {
-    id: matched.email === 'demo@testforge.ai' ? 'usr_demo_01' : matched.email === 'student@testforge.ai' ? 'usr_student_02' : `usr_${Date.now()}`,
+    id: stableId,
     email: matched.email,
     name: matched.name,
     role: matched.role,

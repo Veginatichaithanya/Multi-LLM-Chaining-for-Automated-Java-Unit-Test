@@ -11,7 +11,7 @@
  */
 
 import type { User } from '../types/user';
-import { api, ApiError, storeToken, clearToken, getBaseUrl } from './api';
+import { api, ApiError, storeToken, clearToken, getBaseUrl, getStoredToken } from './api';
 import { mockLogin as devMockLogin, mockRegister as devMockRegister, storeUser, clearStoredUser } from '../mock/auth';
 
 // ── Types mirroring backend schemas ───────────────────────────────────────────
@@ -52,13 +52,20 @@ export const authService = {
   /**
    * Authenticate with email + password.
    *
-   * 1. Tries the real FastAPI backend first.
-   * 2. If the backend is unreachable (status 0):
-   *    - Attempts dev mock for recognized development accounts.
-   *    - For all other accounts, reports that the server is unreachable/spinning up on Render.
+   * Strategy:
+   * 1. Try the real FastAPI backend first.
+   * 2. If the backend is unreachable (status 0): fall back to the local
+   *    dev-mock store (covers Render cold-starts and offline dev).
+   * 3. If the backend returns a 401/422 (bad credentials) BUT the email
+   *    exists in the local mock store (i.e. the user registered while the
+   *    backend was offline): also try mock login.
+   *    This prevents the "registered offline, backend woke up" lock-out bug.
+   * 4. Otherwise re-throw the original error.
    */
   async login(email: string, password: string): Promise<User> {
     const cleanEmail = email.trim().toLowerCase();
+
+    // ── Attempt 1: Real backend ────────────────────────────────────────────
     try {
       const { access_token, user: userOut } = await api.post<TokenResponse>(
         '/auth/login',
@@ -68,27 +75,49 @@ export const authService = {
 
       storeToken(access_token);
       const user = toUser(userOut);
-      storeUser(user); // keep the existing session key for ProtectedRoute
+      storeUser(user);
       return user;
     } catch (err) {
-      if (err instanceof ApiError && err.status === 0) {
-        // Backend is offline / sleeping on Render
+      // ── Attempt 2: Mock fallback (backend offline OR bad credentials) ─────
+      // We try mock for:
+      //   status 0   → backend completely unreachable (offline / cold-start)
+      //   status 401 → backend online but user only exists in mock store
+      //   status 422 → validation error from backend for a mock-only account
+      const shouldTryMock =
+        err instanceof ApiError &&
+        (err.status === 0 || err.status === 401 || err.status === 422);
+
+      if (shouldTryMock) {
         try {
           const devUser = await devMockLogin(cleanEmail, password);
-          console.warn('[authService] Backend offline — logged in using local dev account credentials');
+          if (err instanceof ApiError && err.status === 0) {
+            console.warn(
+              '[authService] Backend offline — logged in using local dev/mock account.',
+            );
+          } else {
+            console.warn(
+              '[authService] Backend returned auth error; user found in local mock store. ' +
+              'This account was likely registered while the backend was offline.',
+            );
+          }
           return devUser;
         } catch {
-          // It wasn't a recognized local dev account. Do NOT lie to user with "Invalid credentials".
-          // Tell the user the API server is unreachable/waking up!
-          const activeUrl = getBaseUrl();
-          throw new Error(
-            `Unable to connect to TestForge backend (${activeUrl}). ` +
-            `If hosted on Render free tier, the service may be spinning up from sleep (takes ~30s). ` +
-            `Please check your connection and retry.`
-          );
+          // Mock also failed — decide on the best error message
+          if (err instanceof ApiError && err.status === 0) {
+            // Backend completely unreachable AND no local account
+            const activeUrl = getBaseUrl();
+            throw new Error(
+              `Unable to connect to TestForge backend (${activeUrl}). ` +
+              `If hosted on Render free tier, the service may be spinning up from sleep (takes ~30s). ` +
+              `Please wait a moment and try again.`,
+            );
+          }
+          // Backend is online and rejected credentials — surface the real error
+          throw err;
         }
       }
-      // Re-throw real API errors (401, 409, 422, etc.)
+
+      // Re-throw any other real API errors (403, 409, 500, etc.)
       throw err;
     }
   },
@@ -120,18 +149,28 @@ export const authService = {
   /**
    * Fetch the current user profile using the stored token.
    * Used to restore session on page refresh.
+   *
+   * Uses a short 5s timeout so a sleeping/offline backend never causes a
+   * 30-second black screen on initial load. The caller (AuthContext) will
+   * fall back to the localStorage cached user if this returns null.
    */
   async getMe(): Promise<User | null> {
+    // No stored token → skip the network call entirely
+    if (!getStoredToken()) return null;
+
     try {
-      const userOut = await api.get<UserOut>('/users/me', true);
+      // 5 s is enough to verify a live backend; avoids a 30 s black screen
+      // when the Render free-tier instance is sleeping.
+      const userOut = await api.get<UserOut>('/users/me', true, 5000);
       return toUser(userOut);
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 401 || err.status === 403) {
-          // Token expired or invalid
+          // Token expired or invalid — clear it so the user is prompted to log in
           authService.logout();
         }
-        // status 0 = backend offline — caller handles it
+        // status 0 = backend offline/timeout — fall through and return null;
+        // AuthContext will restore from the localStorage snapshot instead.
       }
       return null;
     }
