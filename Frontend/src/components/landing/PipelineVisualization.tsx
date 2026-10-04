@@ -286,7 +286,7 @@ export const PipelineVisualization: React.FC = () => {
                   }}
                   className={`w-full text-left p-2.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative z-10 cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-cyan-50/70 via-white to-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1'
+                      ? 'bg-gradient-to-r from-cyan-50/90 via-cyan-50/30 to-white dark:bg-none dark:bg-slate-800/95 border-cyan-500 dark:border-cyan-500/80 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1'
                       : 'bg-white/80 dark:bg-[#0c121e]/70 border-slate-200 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700/60 shadow-xs'
                   }`}
                 >
@@ -325,33 +325,40 @@ export const PipelineVisualization: React.FC = () => {
         </div>
 
         {/* Right Column: Code & Stage Inspection Terminal */}
-        <div className="lg:col-span-7 p-4 sm:p-5 flex flex-col justify-between bg-slate-50/50 dark:bg-[#060910] text-left transition-colors">
+        <div className="lg:col-span-7 p-4 sm:p-5 flex flex-col justify-between bg-slate-50/70 dark:bg-slate-900/60 text-left transition-colors">
           <div>
             {/* Stage Title and Summary */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/80">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 font-semibold">STAGE {currentStage.step}</span>
+                  <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 font-bold tracking-wide">STAGE {currentStage.step}</span>
                   <span className="text-slate-300 dark:text-slate-600">•</span>
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white font-display">{currentStage.label}</h3>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white font-display">{currentStage.label}</h3>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">{currentStage.detail}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{currentStage.detail}</p>
               </div>
             </div>
 
             {/* Code / Execution Console View (IDE Style Editor) */}
-            <div className="relative rounded-xl bg-slate-900 dark:bg-[#03060a] border border-slate-800 font-mono text-xs overflow-hidden text-left shadow-lg">
+            <div className="dark-code-terminal relative rounded-xl bg-[#090d16] border border-slate-800 font-mono text-xs overflow-hidden text-left shadow-xl">
               {/* Header */}
-              <div className="flex items-center justify-between text-[11px] text-slate-300 dark:text-slate-400 px-3.5 py-2.5 bg-slate-800/90 dark:bg-[#080c14] border-b border-slate-800/80">
-                <span className="flex items-center gap-1.5 text-slate-200 font-medium">
-                  <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                  Live Snapshot
-                </span>
+              <div className="flex items-center justify-between text-[11px] px-3.5 py-2.5 bg-[#0e1422] border-b border-slate-800 text-slate-300">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 mr-1">
+                    <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                  </div>
+                  <span className="flex items-center gap-1.5 text-cyan-400 font-semibold pl-1">
+                    <Layers className="w-3.5 h-3.5" />
+                    Live Snapshot
+                  </span>
+                </div>
                 <span className="text-[10px] text-slate-400 font-mono">Read-only buffer</span>
               </div>
 
               {/* Code Area with Fixed Left Line-Number Column and Left-Aligned Code Rows */}
-              <div className="overflow-x-auto overflow-y-auto max-h-[320px] min-h-[260px] p-3 scrollbar-thin text-left bg-slate-900 dark:bg-[#03060a]">
+              <div className="overflow-x-auto overflow-y-auto max-h-[320px] min-h-[260px] p-3 scrollbar-thin text-left bg-[#090d16]">
                 <div className="min-w-full inline-block">
                   {codeLines.map((line, idx) => (
                     <div 
@@ -359,7 +366,7 @@ export const PipelineVisualization: React.FC = () => {
                       className="flex items-baseline hover:bg-slate-800/40 transition-colors leading-6 min-h-[1.5rem] font-mono text-left"
                     >
                       {/* Fixed Line-Number Column */}
-                      <span className="w-8 pr-3 text-right select-none text-slate-500 dark:text-slate-600 text-[11px] shrink-0 border-r border-slate-800/80 mr-3">
+                      <span className="w-8 pr-3 text-right select-none text-slate-500 text-[11px] shrink-0 border-r border-slate-800 mr-3">
                         {idx + 1}
                       </span>
                       {/* Code Content Column */}
@@ -374,12 +381,12 @@ export const PipelineVisualization: React.FC = () => {
           </div>
 
           {/* Bottom Execution Bar */}
-          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between text-[11px] text-slate-600 dark:text-slate-400 font-mono gap-2">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between text-[11px] font-mono gap-2">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-semibold text-slate-700 dark:text-slate-300">Compilation: OK</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">Compilation: OK</span>
               <span className="text-slate-300 dark:text-slate-700">|</span>
-              <span className="font-semibold text-slate-700 dark:text-slate-300">JaCoCo Profiler: ACTIVE</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">JaCoCo Profiler: ACTIVE</span>
             </div>
             <span className="text-slate-500 dark:text-slate-400 text-[10px]">Multi-LLM Chaining Protocol v1.0</span>
           </div>

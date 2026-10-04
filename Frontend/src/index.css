@@ -130,7 +130,6 @@ html.light [class*="bg-[#0a0f1a]"],
 html.light [class*="bg-[#0b0f17]"],
 html.light [class*="bg-[#0b101c]"],
 html.light [class*="bg-[#0d121c]"],
-html.light [class*="bg-[#080c14]"],
 html.light [class*="bg-[#0d1322]"],
 html.light [class*="bg-[#0d1320]"],
 html.light [class*="bg-[#0c1220]"],
@@ -145,52 +144,71 @@ html.light [class*="bg-[#0b0f14]"] {
 }
 
 /* Developer Code Terminals & Code Inspection Panes: Preserve authentic dark IDE theme */
-html.light [class*="bg-[#060910]"],
-html.light [class*="bg-[#03060a]"],
-html.light pre.code-terminal {
+.dark-code-terminal,
+pre.code-terminal {
   background-color: #090d16 !important;
   color: #f1f5f9 !important;
   border-color: #1e293b !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-slate-200,
-html.light [class*="bg-[#03060a]"] .text-slate-200 {
+.dark-code-terminal .text-slate-200,
+pre.code-terminal .text-slate-200 {
   color: #e2e8f0 !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-slate-300,
-html.light [class*="bg-[#03060a]"] .text-slate-300 {
+.dark-code-terminal .text-slate-300,
+pre.code-terminal .text-slate-300 {
   color: #cbd5e1 !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-slate-400,
-html.light [class*="bg-[#03060a]"] .text-slate-400 {
+.dark-code-terminal .text-slate-400,
+pre.code-terminal .text-slate-400 {
   color: #94a3b8 !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-cyan-300,
-html.light [class*="bg-[#03060a]"] .text-cyan-300 {
+.dark-code-terminal .text-cyan-300,
+pre.code-terminal .text-cyan-300 {
   color: #67e8f9 !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-teal-300,
-html.light [class*="bg-[#03060a]"] .text-teal-300 {
+.dark-code-terminal .text-teal-300,
+pre.code-terminal .text-teal-300 {
   color: #5eead4 !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-emerald-400,
-html.light [class*="bg-[#03060a]"] .text-emerald-400 {
+.dark-code-terminal .text-emerald-400,
+pre.code-terminal .text-emerald-400 {
   color: #4ade80 !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-purple-400,
-html.light [class*="bg-[#03060a]"] .text-purple-400 {
+.dark-code-terminal .text-purple-400,
+pre.code-terminal .text-purple-400 {
   color: #c084fc !important;
 }
 
-html.light [class*="bg-[#060910]"] .text-amber-400,
-html.light [class*="bg-[#03060a]"] .text-amber-400 {
+.dark-code-terminal .text-amber-400,
+pre.code-terminal .text-amber-400 {
   color: #fbbf24 !important;
+}
+
+/* Custom Sleek Scrollbar for IDE Terminals */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #090d16;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #090d16 !important;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #334155 !important;
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #475569 !important;
 }
 
 /* FinalCTA Gradient Card in Light Mode */
