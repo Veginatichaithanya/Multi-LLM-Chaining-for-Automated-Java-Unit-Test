@@ -22,23 +22,23 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#05070c] border-t border-slate-800/80 py-12 px-4">
+    <footer className="bg-slate-100/90 dark:bg-[#05070c] border-t border-slate-200 dark:border-slate-800/80 py-12 px-4 transition-colors">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
         {/* Brand Information */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-center md:justify-start gap-2">
-            <div className="w-6 h-6 rounded bg-cyan-950 border border-cyan-800/60 flex items-center justify-center text-cyan-400">
+            <div className="w-6 h-6 rounded bg-cyan-100 dark:bg-cyan-950 border border-cyan-300 dark:border-cyan-800/60 flex items-center justify-center text-cyan-700 dark:text-cyan-400 shadow-xs">
               <Cpu className="w-3.5 h-3.5" />
             </div>
-            <span className="font-bold text-sm tracking-tight text-white">TestForge AI</span>
+            <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white font-display">TestForge AI</span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-600 dark:text-slate-400">
             Multi-LLM Java Unit Test Generation &amp; Refinement
           </p>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-slate-400" aria-label="Footer Navigation">
+        <nav className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-slate-600 dark:text-slate-400" aria-label="Footer Navigation">
           {links.map((link) => (
             <a
               key={link.name}
@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
                 e.preventDefault();
                 handleScroll(link.href);
               }}
-              className="hover:text-cyan-400 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400 rounded px-1"
+              className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400 rounded px-1"
             >
               {link.name}
             </a>
@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
         </nav>
 
         {/* Footnote */}
-        <div className="text-xs font-mono text-slate-400">
+        <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
           <span>Automated Java Testing Research Platform</span>
         </div>
       </div>

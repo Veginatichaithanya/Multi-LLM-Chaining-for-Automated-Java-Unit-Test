@@ -26,7 +26,7 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-cyan-500/25 selection:text-cyan-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#07090e] text-slate-900 dark:text-slate-100 flex flex-col selection:bg-cyan-500/25 selection:text-cyan-200 transition-colors">
       {/* Top Floating Pill Navigation */}
       <PillNav onGetStartedClick={handleNavigateToLogin} />
 

@@ -257,13 +257,20 @@ Refinement loop terminates with verified test suite.`,
               </p>
 
               {/* Code Snippet Box */}
-              <div className="rounded-xl bg-[#03060a] border border-slate-800/90 p-3.5 font-mono text-xs text-slate-300 overflow-x-auto shadow-inner">
-                <div className="flex items-center justify-between text-[10px] text-slate-400 pb-2 mb-2 border-b border-slate-900">
-                  <span className="flex items-center gap-1 text-cyan-400">
-                    <Terminal className="w-3 h-3" />
-                    Live Trace & Context
-                  </span>
-                  <span>Diagnostic Data</span>
+              <div className="rounded-xl bg-slate-900 dark:bg-[#03060a] border border-slate-800 p-3.5 font-mono text-xs text-slate-200 overflow-x-auto shadow-md">
+                <div className="flex items-center justify-between text-[10px] text-slate-400 pb-2.5 mb-2.5 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 rounded-full bg-rose-500/70" />
+                      <div className="w-2 h-2 rounded-full bg-amber-500/70" />
+                      <div className="w-2 h-2 rounded-full bg-emerald-500/70" />
+                    </div>
+                    <span className="flex items-center gap-1.5 text-cyan-400 font-semibold pl-1">
+                      <Terminal className="w-3 h-3" />
+                      Live Trace & Context
+                    </span>
+                  </div>
+                  <span className="text-slate-400 font-mono text-[10px]">Diagnostic Telemetry</span>
                 </div>
                 <pre className="leading-relaxed whitespace-pre font-mono text-[11px] overflow-x-auto text-slate-200">
                   <code>{currentNode.exampleSnippet}</code>

@@ -54,20 +54,20 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       aria-labelledby="validation-detail-title"
     >
       <div
-        className="w-full max-w-5xl rounded-3xl bg-[#090d16] border border-slate-700/80 p-6 sm:p-8 shadow-2xl shadow-cyan-950/40 relative my-auto max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-5xl rounded-3xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-700/80 p-6 sm:p-8 shadow-2xl shadow-slate-300/60 dark:shadow-cyan-950/40 relative my-auto max-h-[90vh] overflow-y-auto transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header Controls */}
-        <div className="flex items-center justify-between pb-5 mb-6 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-5 mb-6 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-800/80 flex items-center justify-center text-cyan-400">
+            <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-950 border border-cyan-300 dark:border-cyan-800/80 flex items-center justify-center text-cyan-700 dark:text-cyan-400">
               <Layers className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider">
+              <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 uppercase tracking-wider font-semibold">
                 Stage Deep Dive
               </span>
-              <h3 id="validation-detail-title" className="text-base font-bold text-white leading-tight">
+              <h3 id="validation-detail-title" className="text-base font-bold text-slate-900 dark:text-white leading-tight font-display">
                 Validation Pipeline Stage 0{currentStage.id}
               </h3>
             </div>
@@ -76,7 +76,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
             aria-label="Close stage details"
           >
             <X className="w-5 h-5" />
@@ -89,44 +89,44 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           <div className="lg:col-span-6 space-y-5 text-left">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-mono text-cyan-400 font-black">STAGE 0{currentStage.id}</span>
-                <span className="text-slate-600">•</span>
+                <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 font-black">STAGE 0{currentStage.id}</span>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
                 <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${currentStage.badgeColor}`}>
                   {currentStage.badge}
                 </span>
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
-                <CurrentIcon className="w-6 h-6 text-cyan-400" />
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5 font-display">
+                <CurrentIcon className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
                 <span>{currentStage.title}</span>
               </h2>
-              <p className="mt-2 text-sm font-semibold text-slate-200 leading-snug">
+              <p className="mt-2 text-sm font-semibold text-slate-800 dark:text-slate-200 leading-snug">
                 {currentStage.description}
               </p>
-              <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+              <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 {currentStage.details}
               </p>
             </div>
 
             {/* Technical Pipeline Artifacts */}
-            <div className="rounded-xl bg-[#050810] border border-slate-800 p-4 space-y-2.5 font-mono text-xs">
-              <div className="flex items-start gap-2 text-slate-300">
-                <Terminal className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+            <div className="rounded-xl bg-slate-50 dark:bg-[#050810] border border-slate-200 dark:border-slate-800 p-4 space-y-2.5 font-mono text-xs">
+              <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                <Terminal className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 text-[11px] block">Input Stream:</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-semibold">Input Stream:</span>
                   <span>{currentStage.technicalSpecs.input}</span>
                 </div>
               </div>
-              <div className="flex items-start gap-2 text-slate-300">
-                <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                <ShieldCheck className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 text-[11px] block">Gate Criteria:</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-semibold">Gate Criteria:</span>
                   <span>{currentStage.technicalSpecs.gateCriteria}</span>
                 </div>
               </div>
-              <div className="flex items-start gap-2 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 text-[11px] block">Output Artifact:</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-semibold">Output Artifact:</span>
                   <span>{currentStage.technicalSpecs.output}</span>
                 </div>
               </div>
@@ -134,7 +134,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
 
             {/* Stage Selector Pills 01 -> 06 */}
             <div>
-              <span className="text-[11px] font-mono text-slate-400 block mb-2">
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 block mb-2 font-semibold">
                 Direct Stage Jump:
               </span>
               <div className="flex flex-wrap gap-2">
@@ -146,10 +146,10 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
                       setSelectedId(s.id);
                       onSelectStage(s.id);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
                       s.id === selectedId
                         ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30 scale-105'
-                        : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-white hover:border-slate-700'
+                        : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:text-slate-950 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
                     0{s.id}. {s.title.split(' ')[0]}
@@ -186,14 +186,14 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
                   return (
                     <Card
                       key={stageItem.id}
-                      className="bg-[#0c121f] border border-slate-700 p-6 shadow-2xl shadow-cyan-950/60 flex flex-col justify-between"
+                      className="bg-white dark:bg-[#0c121f] border border-slate-200 dark:border-slate-700 p-6 shadow-2xl shadow-slate-200/80 dark:shadow-cyan-950/60 flex flex-col justify-between"
                     >
                       {/* Top */}
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-3xl font-black text-slate-600">
+                        <span className="font-mono text-3xl font-black text-slate-300 dark:text-slate-600">
                           0{stageItem.id}
                         </span>
-                        <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-sm">
                           <SIcon className="w-5 h-5" />
                         </div>
                       </div>
@@ -203,21 +203,21 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
                         <span className={`inline-block text-[10px] font-mono px-2 py-0.5 rounded border mb-2.5 ${stageItem.badgeColor}`}>
                           {stageItem.badge}
                         </span>
-                        <h4 className="text-lg font-bold text-white mb-1.5">
+                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5 font-display">
                           {stageItem.title}
                         </h4>
-                        <p className="text-xs font-semibold text-slate-200 leading-snug mb-2">
+                        <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-snug mb-2">
                           {stageItem.description}
                         </p>
-                        <p className="text-[11px] text-slate-400 leading-relaxed">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
                           {stageItem.details}
                         </p>
                       </div>
 
                       {/* Bottom */}
-                      <div className="pt-3 border-t border-slate-800/90 flex items-center justify-between text-xs font-mono text-slate-400">
+                      <div className="pt-3 border-t border-slate-200 dark:border-slate-800/90 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
                         <span>STAGE 0{stageItem.id} OF 06</span>
-                        <ArrowRight className="w-4 h-4 text-cyan-400" />
+                        <ArrowRight className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                       </div>
                     </Card>
                   );

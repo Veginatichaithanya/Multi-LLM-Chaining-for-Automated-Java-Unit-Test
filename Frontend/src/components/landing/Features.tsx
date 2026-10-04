@@ -247,11 +247,11 @@ export const Features: React.FC = () => {
         </div>
 
         {/* Scientific Note Banner */}
-        <div className="mt-12 p-4 rounded-xl bg-[#090e18] border border-slate-800/90 text-xs text-slate-400 flex items-start sm:items-center gap-3 font-mono">
-          <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 shrink-0">
+        <div className="mt-12 p-4 rounded-xl bg-slate-50 dark:bg-[#090e18] border border-slate-200 dark:border-slate-800/90 text-xs text-slate-600 dark:text-slate-400 flex items-start sm:items-center gap-3 font-mono shadow-xs">
+          <span className="px-2.5 py-1 rounded bg-cyan-100/90 dark:bg-cyan-950/80 border border-cyan-300 dark:border-cyan-800/60 text-cyan-800 dark:text-cyan-400 font-bold shrink-0">
             RESEARCH INTEGRITY
           </span>
-          <p>
+          <p className="leading-relaxed">
             The system does not assert automatic superiority of chained models; rather, it provides an automated experimental testbed to quantitatively benchmark and compare each generation strategy.
           </p>
         </div>
