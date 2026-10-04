@@ -30,17 +30,21 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
 
       if (location.pathname !== '/') return;
 
-      // Section scrollspy
+      // Section scrollspy with accurate offset matching the 90px navbar
       const sections = ['about', 'research', 'features', 'how-it-works'];
-      const scrollPosition = window.scrollY + 150;
+      const scrollPosition = window.scrollY + 120;
 
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
-        if (el && el.offsetTop <= scrollPosition) {
-          const matchedItem = navItems.find((item) => item.href === `#${sectionId}`);
-          if (matchedItem) {
-            setActiveTab(matchedItem.name);
-            return;
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            const matchedItem = navItems.find((item) => item.href === `#${sectionId}`);
+            if (matchedItem) {
+              setActiveTab(matchedItem.name);
+              return;
+            }
           }
         }
       }
@@ -52,7 +56,6 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname, navItems]);
-
 
   const handleNavClick = (name: string, href: string) => {
     setActiveTab(name);
@@ -68,7 +71,13 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
     } else {
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+        const navOffset = 90;
+        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - navOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
       }
     }
   };
@@ -83,12 +92,12 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-4 sm:py-5 transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-3 sm:py-4 transition-all duration-300">
       <div
-        className={`w-full max-w-6xl flex items-center justify-between px-3 sm:px-5 py-2.5 rounded-full transition-all duration-300 ${
+        className={`w-full max-w-6xl flex items-center justify-between px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-300 ${
           scrolled
-            ? 'dark:bg-[#0b0f17]/90 dark:border-slate-800/90 dark:shadow-2xl dark:shadow-cyan-950/20 bg-white/95 border border-slate-200 shadow-xl shadow-slate-200/50 backdrop-blur-md'
-            : 'dark:bg-[#0d121c]/70 dark:border-slate-800/50 bg-white/80 border border-slate-200/80 backdrop-blur-sm shadow-sm'
+            ? 'dark:bg-[#080d17]/85 dark:border-cyan-500/20 dark:shadow-[0_8px_32px_rgba(6,182,212,0.12)] bg-white/90 border border-slate-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-xl'
+            : 'dark:bg-[#0a0f1b]/70 dark:border-slate-800/60 bg-white/80 border border-slate-200/70 backdrop-blur-lg shadow-xs'
         }`}
       >
         {/* Brand Logo */}
@@ -98,22 +107,25 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
             e.preventDefault();
             handleNavClick('Home', '#');
           }}
-          className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg pr-2"
+          className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg pr-2 select-none"
           aria-label="TestForge AI Home"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-500 group-hover:border-cyan-400 transition-colors shadow-sm shadow-cyan-500/20">
-            <Cpu className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-emerald-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 group-hover:scale-105 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all duration-300 shadow-sm shadow-cyan-500/20">
+            <Cpu className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-sm tracking-tight dark:text-white text-slate-900 flex items-center gap-1.5">
-              TestForge <span className="dark:text-cyan-400 dark:bg-cyan-950/60 dark:border-cyan-800/60 text-cyan-800 bg-cyan-50 border border-cyan-200 font-mono text-xs px-1.5 py-0.5 rounded">AI</span>
+            <span className="font-display font-bold text-sm tracking-tight dark:text-white text-slate-900 flex items-center gap-1.5">
+              TestForge{' '}
+              <span className="dark:text-cyan-300 dark:bg-cyan-950/80 dark:border-cyan-700/60 text-cyan-800 bg-cyan-50 border border-cyan-200/80 font-mono text-[11px] font-semibold px-1.5 py-0.5 rounded-md shadow-xs">
+                AI
+              </span>
             </span>
           </div>
         </a>
 
         {/* Desktop Navigation Pills */}
         <nav
-          className="hidden md:flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-full dark:bg-slate-900/80 dark:border-slate-800/80 bg-slate-100/90 border border-slate-200/90 shadow-inner"
+          className="hidden md:flex items-center gap-1 p-1 rounded-full dark:bg-slate-900/70 dark:border-slate-800/80 bg-slate-100/80 border border-slate-200/80 backdrop-blur-md shadow-inner"
           aria-label="Main Navigation"
         >
           {navItems.map((item) => {
@@ -126,15 +138,15 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
                   e.preventDefault();
                   handleNavClick(item.name, item.href);
                 }}
-                className={`relative px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 select-none ${
+                className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 select-none ${
                   isActive
-                    ? 'dark:text-white dark:bg-slate-800 dark:border-slate-700/60 text-slate-950 bg-gradient-to-r from-white via-cyan-50/80 to-blue-50/80 shadow-sm border border-cyan-200/90 font-bold ring-1 ring-cyan-400/30'
-                    : 'dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/40 text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                    ? 'dark:text-white dark:bg-gradient-to-r dark:from-slate-800 dark:to-slate-850 dark:border-slate-700/80 text-slate-950 bg-white shadow-sm border border-cyan-300/60 font-semibold ring-1 ring-cyan-400/25'
+                    : 'dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/50 text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
                 {isActive && (
-                  <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 mr-1.5 animate-pulse align-middle shadow-xs shadow-cyan-500/50" />
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 mr-1.5 animate-pulse align-middle shadow-xs shadow-cyan-400" />
                 )}
                 {item.name}
               </a>
@@ -142,19 +154,19 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
           })}
         </nav>
 
-        {/* Right CTA */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
           {/* Light / Dark Mode Toggle */}
           <ThemeToggle />
 
           <button
             type="button"
             onClick={handleGetStarted}
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 hover:brightness-110 active:scale-[0.98] transition-all shadow-md shadow-cyan-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
+            className="group relative hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 hover:brightness-110 active:scale-[0.97] transition-all duration-200 shadow-md shadow-cyan-500/25 hover:shadow-cyan-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer overflow-hidden"
             id="nav-get-started-btn"
           >
-            <span>Get Started</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span className="relative z-10">Get Started</span>
+            <ArrowRight className="w-3.5 h-3.5 relative z-10 transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
 
           {/* Mobile Menu Button */}

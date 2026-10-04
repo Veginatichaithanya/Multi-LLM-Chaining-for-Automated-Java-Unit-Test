@@ -29,11 +29,11 @@ export const TechStrip: React.FC = () => {
               return (
                 <div
                   key={tech.name}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-slate-700 transition-colors shadow-xs group"
+                  className="hover-lift flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 hover:border-cyan-400/80 dark:hover:border-cyan-500/50 transition-all duration-200 shadow-xs hover:shadow-md cursor-default group"
                 >
-                  <Icon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:text-teal-500 dark:group-hover:text-teal-300 transition-colors" />
+                  <Icon className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 group-hover:text-cyan-400 transition-all duration-200" />
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">{tech.name}</span>
+                    <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">{tech.name}</span>
                     <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">{tech.role}</span>
                   </div>
                 </div>

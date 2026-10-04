@@ -64,7 +64,7 @@ export const HowItWorks: React.FC = () => {
             <Layers className="w-3.5 h-3.5" />
             <span>PIPELINE ARCHITECTURE</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             From Java Source to{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-cyan-400 dark:to-teal-300">
               Validated Tests

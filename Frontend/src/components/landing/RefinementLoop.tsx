@@ -145,7 +145,7 @@ Refinement loop terminates with verified test suite.`,
             <RefreshCw className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
             <span>CLOSED-LOOP REFINEMENT</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Tests Don't Stop at{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 dark:from-cyan-400 dark:to-teal-300">
               Generation.

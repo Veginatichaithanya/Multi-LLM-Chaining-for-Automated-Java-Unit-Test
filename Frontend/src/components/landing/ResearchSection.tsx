@@ -59,7 +59,7 @@ export const ResearchSection: React.FC = () => {
             <FileSpreadsheet className="w-3.5 h-3.5" />
             <span>EMPIRICAL EVALUATION</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Built as a{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-400 dark:to-teal-300">
               Research Experiment
@@ -77,7 +77,7 @@ export const ResearchSection: React.FC = () => {
             return (
               <div
                 key={p.id}
-                className="rounded-2xl bg-white dark:bg-[#0a0e18] border border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between hover:border-cyan-400 dark:hover:border-slate-700 transition-all shadow-md shadow-slate-200/50 dark:shadow-sm"
+                className="hover-lift rounded-2xl bg-white dark:bg-[#0a0e18] border border-slate-200/90 dark:border-slate-800 p-6 flex flex-col justify-between hover:border-cyan-400/80 dark:hover:border-cyan-500/50 transition-all duration-300 shadow-md shadow-slate-200/50 dark:shadow-sm hover:shadow-xl dark:hover:shadow-cyan-950/20"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -88,7 +88,7 @@ export const ResearchSection: React.FC = () => {
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{p.name}</h3>
+                  <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white mb-1">{p.name}</h3>
                   <div className="text-xs font-mono text-cyan-600 dark:text-cyan-400/90 mb-3 font-semibold">{p.model}</div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{p.description}</p>
                 </div>
