@@ -134,8 +134,8 @@ export const Features: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 dark:bg-slate-900 border border-cyan-200 dark:border-slate-800 text-xs font-mono text-cyan-700 dark:text-cyan-400 mb-4 font-semibold shadow-xs">
-            <Workflow className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/80 text-xs font-mono text-cyan-800 dark:text-cyan-300 mb-4 font-semibold shadow-xs">
+            <Workflow className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>VALIDATION PIPELINE</span>
           </div>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">

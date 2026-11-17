@@ -39,6 +39,7 @@ TestForge AI leverages multiple LLMs (e.g. GPT-4o, Claude 3.5 Sonnet, Gemini 1.5
 │   ├── package.json         # Node dependencies & scripts
 │   └── .env.example         # Frontend environment configuration template
 │
+├── PPT_README.md            # Comprehensive Presentation & Slide Deck Guide (Viva/Defense)
 └── README.md
 ```
 

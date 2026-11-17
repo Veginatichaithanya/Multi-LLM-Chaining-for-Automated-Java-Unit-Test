@@ -195,4 +195,15 @@ export const resultsApi = {
       return getMockMutationComparison(projectId);
     }
   },
+
+  /**
+   * Seed or ensure benchmark experiment exists for project so figures can be generated.
+   */
+  async seedBenchmark(projectId: string): Promise<{ status: string; experiment_id: string }> {
+    return api.post<{ status: string; experiment_id: string }>(
+      `/api/results/projects/${projectId}/seed-benchmark`,
+      {},
+      true,
+    );
+  },
 };

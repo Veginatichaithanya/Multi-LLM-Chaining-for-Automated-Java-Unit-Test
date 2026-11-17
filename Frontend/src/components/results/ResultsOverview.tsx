@@ -10,11 +10,12 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader2, FlaskConical } from 'lucide-react';
+import { Loader2, FlaskConical, BarChart3 } from 'lucide-react';
 import { projectApi } from '../../services/projectApi';
 import type { Project } from '../../services/projectApi';
 import { experimentApi } from '../../services/experimentApi';
 import type { ExperimentOut, ExperimentDetailOut, ExperimentRunOut } from '../../services/experimentApi';
+import { resultsApi } from '../../services/resultsApi';
 import type { ComparisonResponse, RefinementHistoryResponse } from '../../services/resultsApi';
 
 interface Props {
@@ -26,6 +27,8 @@ interface Props {
   onRunChange: (id: string) => void;
   comparisonData: ComparisonResponse | null;
   historyData: RefinementHistoryResponse | null;
+  onGenerateGraphs?: (projectId: string, experimentId: string, runId: string) => void;
+  isGeneratingGraphs?: boolean;
 }
 
 function buildDiscussionSummary(
@@ -67,6 +70,8 @@ export const ResultsOverview: React.FC<Props> = ({
   onRunChange,
   comparisonData,
   historyData,
+  onGenerateGraphs,
+  isGeneratingGraphs,
 }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [experiments, setExperiments] = useState<ExperimentOut[]>([]);
@@ -74,6 +79,7 @@ export const ResultsOverview: React.FC<Props> = ({
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [loadingExperiments, setLoadingExperiments] = useState(false);
   const [loadingRuns, setLoadingRuns] = useState(false);
+  const [isAutoGeneratingExp, setIsAutoGeneratingExp] = useState(false);
 
   // Stable refs so callbacks never need to be in dep arrays
   const onProjectChangeRef = useRef(onProjectChange);
@@ -99,13 +105,11 @@ export const ResultsOverview: React.FC<Props> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reload experiments when project changes
+  // Reload experiments ONLY when selectedProjectId changes
   useEffect(() => {
     if (!selectedProjectId) {
       setExperiments([]);
-      onExperimentChangeRef.current('');
       setRuns([]);
-      onRunChangeRef.current('');
       return;
     }
     setLoadingExperiments(true);
@@ -114,8 +118,8 @@ export const ResultsOverview: React.FC<Props> = ({
       .then((exps) => {
         setExperiments(exps);
         if (exps.length > 0) {
-          // Select first experiment if none currently selected or current not in list
-          if (!selectedExperimentId || !exps.some((e) => e.id === selectedExperimentId)) {
+          // Keep current selection if valid in new project, otherwise pick first
+          if (!exps.some((e) => e.id === selectedExperimentId)) {
             onExperimentChangeRef.current(exps[0].id);
           }
         } else {
@@ -126,13 +130,13 @@ export const ResultsOverview: React.FC<Props> = ({
       })
       .catch(console.warn)
       .finally(() => setLoadingExperiments(false));
-  }, [selectedProjectId, selectedExperimentId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProjectId]);
 
-  // Reload runs when experiment changes
+  // Reload runs ONLY when selectedExperimentId changes
   useEffect(() => {
     if (!selectedExperimentId) {
       setRuns([]);
-      onRunChangeRef.current('');
       return;
     }
     setLoadingRuns(true);
@@ -142,8 +146,8 @@ export const ResultsOverview: React.FC<Props> = ({
         const multiRuns = (detail.runs || []).filter((r) => r.iteration > 0);
         setRuns(multiRuns);
         if (multiRuns.length > 0) {
-          if (!selectedRunId || !multiRuns.some((r) => r.id === selectedRunId)) {
-            // Default to latest refinement run
+          // Keep current selection if valid, otherwise select latest refinement run
+          if (!multiRuns.some((r) => r.id === selectedRunId)) {
             onRunChangeRef.current(multiRuns[multiRuns.length - 1].id);
           }
         } else {
@@ -152,7 +156,38 @@ export const ResultsOverview: React.FC<Props> = ({
       })
       .catch(console.warn)
       .finally(() => setLoadingRuns(false));
-  }, [selectedExperimentId, selectedRunId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedExperimentId]);
+
+  const handleGenerateClick = async () => {
+    if (!selectedProjectId) return;
+
+    if (experiments.length === 0) {
+      setIsAutoGeneratingExp(true);
+      try {
+        await resultsApi.seedBenchmark(selectedProjectId);
+        const updatedExps = await experimentApi.list(selectedProjectId);
+        setExperiments(updatedExps);
+        if (updatedExps.length > 0) {
+          const newExpId = updatedExps[0].id;
+          onExperimentChange(newExpId);
+          const detail = await experimentApi.get(newExpId);
+          const multiRuns = (detail.runs || []).filter((r) => r.iteration > 0);
+          setRuns(multiRuns);
+          const newRunId = multiRuns.length > 0 ? multiRuns[multiRuns.length - 1].id : '';
+          if (newRunId) onRunChange(newRunId);
+          onGenerateGraphs?.(selectedProjectId, newExpId, newRunId);
+        }
+      } catch (err) {
+        console.warn('Failed to seed benchmark experiment:', err);
+      } finally {
+        setIsAutoGeneratingExp(false);
+      }
+      return;
+    }
+
+    onGenerateGraphs?.(selectedProjectId, selectedExperimentId, selectedRunId);
+  };
 
   const discussion = buildDiscussionSummary(comparisonData, historyData);
 
@@ -172,8 +207,8 @@ export const ResultsOverview: React.FC<Props> = ({
         </span>
       </div>
 
-      {/* Selectors: Project, Experiment, Run */}
-      <div className="flex flex-wrap gap-4">
+      {/* Selectors: Project, Experiment, Run + Action Button */}
+      <div className="flex flex-wrap items-end gap-4">
         {/* Project Selector */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
@@ -261,6 +296,32 @@ export const ResultsOverview: React.FC<Props> = ({
               ))}
             </select>
           )}
+        </div>
+
+        {/* Action Button: Generate Graphs */}
+        <div className="flex flex-col gap-1.5 justify-end">
+          <label className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            Action
+          </label>
+          <button
+            id="generate-graphs-btn"
+            type="button"
+            onClick={handleGenerateClick}
+            disabled={!selectedProjectId || isGeneratingGraphs || isAutoGeneratingExp}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-indigo-500 hover:from-cyan-400 hover:to-indigo-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-950/40 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed h-[37px] whitespace-nowrap"
+          >
+            {isGeneratingGraphs || isAutoGeneratingExp ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                <span>{isAutoGeneratingExp ? 'Setting up Benchmark…' : 'Generating Graphs…'}</span>
+              </>
+            ) : (
+              <>
+                <BarChart3 className="w-4 h-4 text-slate-950" />
+                <span>Generate Graphs</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 

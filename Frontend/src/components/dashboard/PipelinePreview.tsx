@@ -40,8 +40,8 @@ export const PipelinePreview: React.FC = () => {
     },
     {
       id: 'step-3',
-      name: 'Gemini',
-      subtitle: 'Draft Generator',
+      name: 'Google Gemini',
+      subtitle: 'Gemini 2.5 API',
       category: 'llm-gemini',
       icon: Sparkles,
       tag: 'Step 03',
@@ -72,8 +72,8 @@ export const PipelinePreview: React.FC = () => {
     },
     {
       id: 'step-7',
-      name: 'OpenAI Refinement',
-      subtitle: 'Patch Refinement',
+      name: 'Refinement LLM',
+      subtitle: 'OpenRouter / AgentRouter',
       category: 'llm-openai',
       icon: Bot,
       tag: 'Step 07',

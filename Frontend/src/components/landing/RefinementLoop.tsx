@@ -179,14 +179,14 @@ Refinement loop terminates with verified test suite.`,
                       onClick={() => setSelectedNode(node.id)}
                       className={`w-full text-left p-3 rounded-xl border transition-all duration-200 flex items-center gap-3 cursor-pointer ${
                         isSelected
-                          ? 'bg-gradient-to-r from-cyan-50/70 via-white to-white dark:bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-2'
-                          : 'bg-white/80 dark:bg-[#090d16]/80 border-slate-200 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
+                          ? 'bg-cyan-50/90 dark:bg-slate-800/95 border-cyan-500 dark:border-cyan-400 shadow-sm ring-1 ring-cyan-500/20 translate-x-1.5'
+                          : 'bg-white dark:bg-[#0c121e] border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
                       }`}
                     >
                       <div
                         className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${
                           isSelected
-                            ? 'bg-cyan-500/15 border-cyan-500/50 text-cyan-600 dark:text-cyan-300'
+                            ? 'bg-cyan-500/20 border-cyan-500 text-cyan-700 dark:text-cyan-300'
                             : node.iconBoxColor
                         }`}
                       >
@@ -195,14 +195,16 @@ Refinement loop terminates with verified test suite.`,
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <span className={`text-xs font-bold truncate ${isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-200'}`}>
+                          <span className={`text-xs font-bold truncate ${isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>
                             {node.name}
                           </span>
                           <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${node.badgeColor}`}>
                             {node.badge}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{node.subtext}</p>
+                        <p className={`text-[11px] truncate ${isSelected ? 'text-slate-700 dark:text-slate-300 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
+                          {node.subtext}
+                        </p>
                       </div>
                     </button>
 
@@ -217,7 +219,7 @@ Refinement loop terminates with verified test suite.`,
               })}
 
               {/* Loop Return Indicator */}
-              <div className="mt-3 p-2.5 rounded-xl border border-dashed border-cyan-300 dark:border-cyan-800/60 bg-gradient-to-r from-cyan-50/80 via-blue-50/50 to-teal-50/80 dark:bg-cyan-950/20 flex items-center justify-center gap-2 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold shadow-xs">
+              <div className="mt-3 p-2.5 rounded-xl border border-dashed border-cyan-300 dark:border-cyan-800 bg-cyan-50/70 dark:bg-slate-900 flex items-center justify-center gap-2 text-xs font-mono text-cyan-800 dark:text-cyan-300 font-semibold shadow-2xs">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '8s' }} />
                 <span>Loops back to Compile & Execute until coverage criteria met</span>
               </div>

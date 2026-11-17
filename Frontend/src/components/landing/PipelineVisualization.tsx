@@ -286,8 +286,8 @@ export const PipelineVisualization: React.FC = () => {
                   }}
                   className={`w-full text-left p-2.5 rounded-xl border transition-all duration-200 flex items-center gap-3 relative z-10 cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-cyan-50/90 via-cyan-50/30 to-white dark:bg-none dark:bg-slate-800/95 border-cyan-500 dark:border-cyan-500/80 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30 translate-x-1'
-                      : 'bg-white/80 dark:bg-[#0c121e]/70 border-slate-200 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700/60 shadow-xs'
+                      ? 'bg-cyan-50/90 dark:bg-slate-800/95 border-cyan-500 dark:border-cyan-400 shadow-sm ring-1 ring-cyan-500/20 translate-x-1'
+                      : 'bg-white dark:bg-[#0c121e] border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
                   }`}
                 >
                   {/* Step Number & Icon */}

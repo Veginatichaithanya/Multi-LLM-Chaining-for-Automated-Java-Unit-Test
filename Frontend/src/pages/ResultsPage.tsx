@@ -145,6 +145,16 @@ export const ResultsPage: React.FC = () => {
     setSelectedRunId(id);
   };
 
+  const handleGenerateGraphs = useCallback(
+    (projectId?: string, experimentId?: string, runId?: string) => {
+      const pid = projectId || selectedProjectId;
+      const eid = experimentId !== undefined ? experimentId : selectedExperimentId;
+      const rid = runId !== undefined ? runId : selectedRunId;
+      fetchAll(pid, eid, rid);
+    },
+    [fetchAll, selectedProjectId, selectedExperimentId, selectedRunId],
+  );
+
   const openPlaceholder = (title: string, description: string) => {
     setModalState({ isOpen: true, title, description });
   };
@@ -254,6 +264,8 @@ export const ResultsPage: React.FC = () => {
               onRunChange={handleRunChange}
               comparisonData={comparisonData}
               historyData={historyData}
+              onGenerateGraphs={handleGenerateGraphs}
+              isGeneratingGraphs={comparisonLoading || historyLoading || mutationLoading}
             />
 
             {/* ── FIG. 3 ──────────────────────────────────────────────────── */}

@@ -169,12 +169,7 @@ export const DashboardPage: React.FC = () => {
 
           {/* Research Configuration Matrix */}
           <ResearchOverview
-            onConfigureExperiments={() =>
-              openPlaceholder(
-                'Experiments Configuration',
-                'Compare single-LLM (Gemini / OpenAI) vs chained multi-LLM execution.'
-              )
-            }
+            onConfigureExperiments={() => navigate('/experiments')}
           />
 
           {/* Recent Projects & Activity Grid */}

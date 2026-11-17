@@ -15,8 +15,8 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ onGetStartedClick }) => {
 
           <div className="relative z-10 max-w-2xl mx-auto">
             {/* Tag */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-700 dark:text-cyan-300 text-xs font-mono mb-6 font-semibold shadow-xs">
-              <FolderUp className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-800 dark:text-cyan-300 text-xs font-mono mb-6 font-semibold shadow-xs">
+              <FolderUp className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>AUTOMATED WORKFLOW READY</span>
             </div>
 
@@ -38,7 +38,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ onGetStartedClick }) => {
               <button
                 type="button"
                 onClick={onGetStartedClick}
-                className="group hover-lift w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 font-bold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
+                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-bold text-sm active:scale-[0.98] transition-all shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer"
                 id="final-cta-btn"
               >
                 <span>Get Started</span>

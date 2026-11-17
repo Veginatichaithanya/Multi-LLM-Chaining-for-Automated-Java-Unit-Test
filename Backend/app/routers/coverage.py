@@ -32,9 +32,8 @@ def run_or_get_coverage_endpoint(
     try:
         test_result_id = payload.test_result_id
         if not test_result_id:
-            # Fallback: if generation_id was provided instead, find latest test_result for that generation
+            from app.models.test_result import TestResult
             if payload.generation_id:
-                from app.models.test_result import TestResult
                 tr = (
                     db.query(TestResult)
                     .filter(
@@ -46,16 +45,22 @@ def run_or_get_coverage_endpoint(
                 )
                 if tr:
                     test_result_id = tr.id
+
+            if not test_result_id:
+                # Project-wide latest execution fallback
+                tr_fallback = (
+                    db.query(TestResult)
+                    .filter(TestResult.project_id == project_id)
+                    .order_by(TestResult.created_at.desc())
+                    .first()
+                )
+                if tr_fallback:
+                    test_result_id = tr_fallback.id
                 else:
                     raise HTTPException(
-                        status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"No test execution found for generation {payload.generation_id}",
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="No test executions found for this project. Please run tests first.",
                     )
-            else:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Either test_result_id or generation_id must be provided",
-                )
 
         cov_record = TestExecutionService.get_or_calculate_coverage(
             db=db,

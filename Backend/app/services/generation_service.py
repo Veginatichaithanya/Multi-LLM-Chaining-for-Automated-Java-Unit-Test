@@ -28,6 +28,8 @@ Your task is to generate high-quality JUnit 5 unit tests for the supplied Java s
 Requirements:
 - Use JUnit 5.
 - Generate compilable Java code.
+- ALWAYS start the file directly with the 'package <package_name>;' declaration matching the target class.
+- NEVER output the file name, class name, or title text before the package declaration or imports.
 - Cover normal cases.
 - Cover boundary cases.
 - Cover invalid inputs where applicable.
@@ -40,7 +42,7 @@ Requirements:
 - Do not invent constructors.
 - Do not use JUnit 4.
 - Do not use Mockito unless mocking is actually required.
-- Return only the test source code.
+- Return only the test source code without markdown fences or preamble.
 """
 
 _REFINEMENT_SYSTEM_PROMPT = """\

@@ -6,6 +6,7 @@ Validates Java source files, sizes, and file types.
 from __future__ import annotations
 
 import os
+import re
 
 from app.config import get_settings
 
@@ -79,25 +80,52 @@ def validate_provider_name(provider: str) -> None:
 
 def sanitize_test_code(test_code: str | None) -> str:
     """
-    Remove markdown code fences from AI-generated test code.
+    Remove markdown code fences and rogue preamble text from AI-generated test code.
     If the LLM output was truncated mid-method, trims the incomplete method
     and ensures class closing braces are balanced.
     """
     if not test_code:
         return ""
-    lines = test_code.strip().splitlines()
 
-    # Remove opening fence
-    if lines and lines[0].strip().startswith("```"):
-        lines = lines[1:]
+    code = test_code.strip()
 
-    # Remove closing fence
-    if lines and lines[-1].strip() == "```":
-        lines = lines[:-1]
+    # 1. Extract from markdown code fence if present
+    fence_match = re.search(r'```(?:java)?\s*\n(.*?)```', code, re.DOTALL | re.IGNORECASE)
+    if fence_match:
+        code = fence_match.group(1).strip()
+    else:
+        # Strip boundary fences if present
+        lines = code.splitlines()
+        if lines and lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        code = "\n".join(lines).strip()
 
-    code = "\n".join(lines).strip()
+    # 2. Strip rogue preamble lines before the first valid Java token
+    # (such as 'com.testforge.services.PaymentServiceTest' or 'PaymentServiceTest.java' or 'Here is the test:')
+    lines = code.splitlines()
+    first_code_idx = 0
+    valid_starters = (
+        "package ", "import ", "//", "/*", "*", "@",
+        "public ", "class ", "final ", "abstract ", "protected ", "private "
+    )
+    for i, line in enumerate(lines):
+        trimmed = line.strip()
+        if not trimmed:
+            continue
+        if any(trimmed.startswith(prefix) for prefix in valid_starters):
+            first_code_idx = i
+            break
+        if trimmed.endswith(";") or "{" in trimmed:
+            first_code_idx = i
+            break
 
-    # Balance unclosed braces if output was cut off mid-method
+    if first_code_idx > 0:
+        lines = lines[first_code_idx:]
+        code = "\n".join(lines).strip()
+
+    # 3. Balance unclosed braces if output was cut off mid-method
     open_b = code.count("{")
     close_b = code.count("}")
     if open_b > close_b:

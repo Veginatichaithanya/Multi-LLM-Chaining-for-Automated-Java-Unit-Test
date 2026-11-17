@@ -48,6 +48,24 @@ DEV_USERS = [
         "is_active": True,
         "is_verified": True,
     },
+    {
+        "id": str(uuid.uuid4()),
+        "email": "srihariniduddekunta@gmail.com",
+        "name": "Sri Harini",
+        "password": "Sriharini@123",
+        "role": "Senior QA Architect",
+        "is_active": True,
+        "is_verified": True,
+    },
+    {
+        "id": str(uuid.uuid4()),
+        "email": "veginatichaithanya@gmail.com",
+        "name": "Chaithanya V",
+        "password": "TestForge@123",
+        "role": "Developer",
+        "is_active": True,
+        "is_verified": True,
+    },
 ]
 
 

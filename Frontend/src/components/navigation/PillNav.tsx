@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Cpu, ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface PillNavProps {
@@ -25,37 +25,46 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 10);
 
-      if (location.pathname !== '/') return;
+          if (location.pathname === '/') {
+            if (window.scrollY < 180) {
+              setActiveTab('Home');
+            } else {
+              const sections = [
+                { name: 'About', id: 'about' },
+                { name: 'Research', id: 'research' },
+                { name: 'Features', id: 'features' },
+                { name: 'How It Works', id: 'how-it-works' },
+              ];
 
-      // Section scrollspy with accurate offset matching the 90px navbar
-      const sections = ['about', 'research', 'features', 'how-it-works'];
-      const scrollPosition = window.scrollY + 120;
-
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            const matchedItem = navItems.find((item) => item.href === `#${sectionId}`);
-            if (matchedItem) {
-              setActiveTab(matchedItem.name);
-              return;
+              for (const section of sections) {
+                const el = document.getElementById(section.id);
+                if (el) {
+                  const rect = el.getBoundingClientRect();
+                  if (rect.top <= 140 && rect.bottom > 140) {
+                    setActiveTab(section.name);
+                    break;
+                  }
+                }
+              }
             }
           }
-        }
-      }
-      if (window.scrollY < 200) {
-        setActiveTab('Home');
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [location.pathname, navItems]);
+  }, [location.pathname]);
 
   const handleNavClick = (name: string, href: string) => {
     setActiveTab(name);
@@ -71,8 +80,8 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
     } else {
       const target = document.querySelector(href);
       if (target) {
-        const navOffset = 90;
-        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const navOffset = 72;
+        const elementPosition = target.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = elementPosition - navOffset;
         window.scrollTo({
           top: offsetPosition,
@@ -92,14 +101,14 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-3 sm:py-4 transition-all duration-300">
-      <div
-        className={`w-full max-w-6xl flex items-center justify-between px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-300 ${
-          scrolled
-            ? 'dark:bg-[#080d17]/85 dark:border-cyan-500/20 dark:shadow-[0_8px_32px_rgba(6,182,212,0.12)] bg-white/90 border border-slate-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-xl'
-            : 'dark:bg-[#0a0f1b]/70 dark:border-slate-800/60 bg-white/80 border border-slate-200/70 backdrop-blur-lg shadow-xs'
-        }`}
-      >
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-200 ${
+        scrolled
+          ? 'bg-white/95 dark:bg-[#07090e]/95 border-b border-slate-200/90 dark:border-slate-800/90 shadow-xs dark:shadow-[0_4px_24px_rgba(0,0,0,0.5)] backdrop-blur-md'
+          : 'bg-white/80 dark:bg-[#07090e]/80 border-b border-slate-200/60 dark:border-slate-800/60 backdrop-blur-sm'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <a
           href="#"
@@ -107,25 +116,25 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
             e.preventDefault();
             handleNavClick('Home', '#');
           }}
-          className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg pr-2 select-none"
+          className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-lg select-none"
           aria-label="TestForge AI Home"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-emerald-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 group-hover:scale-105 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all duration-300 shadow-sm shadow-cyan-500/20">
-            <Cpu className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
+          <div className="w-8 h-8 rounded-lg bg-slate-900 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs shadow-xs transition-transform group-hover:scale-105">
+            TF
           </div>
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-sm tracking-tight dark:text-white text-slate-900 flex items-center gap-1.5">
-              TestForge{' '}
-              <span className="dark:text-cyan-300 dark:bg-cyan-950/80 dark:border-cyan-700/60 text-cyan-800 bg-cyan-50 border border-cyan-200/80 font-mono text-[11px] font-semibold px-1.5 py-0.5 rounded-md shadow-xs">
-                AI
-              </span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-display font-bold text-base tracking-tight text-slate-900 dark:text-white">
+              TestForge
+            </span>
+            <span className="text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/80 border border-cyan-200 dark:border-cyan-800/80 font-mono text-[10px] font-bold px-1.5 py-0.5 rounded shadow-2xs">
+              AI
             </span>
           </div>
         </a>
 
-        {/* Desktop Navigation Pills */}
+        {/* Desktop Navigation Links */}
         <nav
-          className="hidden md:flex items-center gap-1 p-1 rounded-full dark:bg-slate-900/70 dark:border-slate-800/80 bg-slate-100/80 border border-slate-200/80 backdrop-blur-md shadow-inner"
+          className="hidden md:flex items-center gap-1"
           aria-label="Main Navigation"
         >
           {navItems.map((item) => {
@@ -138,16 +147,13 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
                   e.preventDefault();
                   handleNavClick(item.name, item.href);
                 }}
-                className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 select-none ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 select-none ${
                   isActive
-                    ? 'dark:text-white dark:bg-gradient-to-r dark:from-slate-800 dark:to-slate-850 dark:border-slate-700/80 text-slate-950 bg-white shadow-sm border border-cyan-300/60 font-semibold ring-1 ring-cyan-400/25'
-                    : 'dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/50 text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                    ? 'text-slate-950 dark:text-white bg-slate-100 dark:bg-slate-800/90 font-semibold shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/50'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
-                {isActive && (
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 mr-1.5 animate-pulse align-middle shadow-xs shadow-cyan-400" />
-                )}
                 {item.name}
               </a>
             );
@@ -155,25 +161,33 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Light / Dark Mode Toggle */}
           <ThemeToggle />
 
           <button
             type="button"
+            onClick={() => navigate('/login')}
+            className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
+          >
+            Sign In
+          </button>
+
+          <button
+            type="button"
             onClick={handleGetStarted}
-            className="group relative hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 text-slate-950 hover:brightness-110 active:scale-[0.97] transition-all duration-200 shadow-md shadow-cyan-500/25 hover:shadow-cyan-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 cursor-pointer overflow-hidden"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 active:scale-[0.98] transition-all duration-200 shadow-xs cursor-pointer group"
             id="nav-get-started-btn"
           >
-            <span className="relative z-10">Get Started</span>
-            <ArrowRight className="w-3.5 h-3.5 relative z-10 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <span>Get Started</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
 
           {/* Mobile Menu Button */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-full dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             aria-expanded={mobileMenuOpen}
             aria-label="Toggle navigation menu"
             id="nav-mobile-toggle"
@@ -186,7 +200,7 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-x-4 top-20 p-4 rounded-2xl dark:bg-[#0b0f17]/95 dark:border-slate-800 bg-white/95 border border-slate-200 shadow-2xl flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-4 duration-200 backdrop-blur-xl"
+          className="md:hidden border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#07090e]/95 backdrop-blur-xl px-4 py-3 flex flex-col gap-1 shadow-lg animate-in fade-in duration-150"
           id="mobile-nav-menu"
         >
           {navItems.map((item) => {
@@ -199,26 +213,36 @@ export const PillNav: React.FC<PillNavProps> = ({ onGetStartedClick }) => {
                   e.preventDefault();
                   handleNavClick(item.name, item.href);
                 }}
-                className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${
                   isActive
-                    ? 'dark:text-cyan-400 dark:bg-cyan-950/40 dark:border-cyan-800/40 text-cyan-800 bg-cyan-50 border border-cyan-200 font-semibold'
-                    : 'dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/50 text-slate-700 hover:text-slate-950 hover:bg-slate-100'
+                    ? 'text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 font-semibold'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
               >
                 <span>{item.name}</span>
-                {isActive && <span className="w-2 h-2 rounded-full bg-cyan-500" />}
+                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />}
               </a>
             );
           })}
 
-          <div className="pt-2 mt-1 border-t dark:border-slate-800 border-slate-200">
+          <div className="pt-2.5 mt-1 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                navigate('/login');
+              }}
+              className="flex-1 py-2 rounded-lg text-sm font-semibold text-center text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              Sign In
+            </button>
             <button
               type="button"
               onClick={handleGetStarted}
-              className="w-full flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 hover:brightness-110 transition-all shadow-md shadow-cyan-500/20 cursor-pointer"
+              className="flex-1 py-2 rounded-lg text-sm font-semibold text-center text-white dark:text-slate-950 bg-slate-900 dark:bg-cyan-500 hover:bg-slate-800 dark:hover:bg-cyan-400 transition-colors flex items-center justify-center gap-1.5"
             >
               <span>Get Started</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

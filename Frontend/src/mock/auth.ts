@@ -27,6 +27,12 @@ export const DEVELOPMENT_ACCOUNTS: DevAccount[] = [
     name: 'Sri Harini',
     role: 'Senior QA Architect',
   },
+  {
+    email: 'veginatichaithanya@gmail.com',
+    password: 'TestForge@123',
+    name: 'Chaithanya V',
+    role: 'Developer',
+  },
 ];
 
 const STORAGE_KEY = 'testforge_auth_session';

@@ -24,6 +24,7 @@ from typing import List, Optional
 from app.config import get_settings
 from app.engines.jacoco_runner import JaCoCoCoverage, parse_jacoco_report
 from app.engines.junit_runner import SurefireReport, parse_surefire_reports
+from app.utils.validators import sanitize_test_code
 
 settings = get_settings()
 
@@ -306,6 +307,7 @@ def prepare_workspace(
         f.write(source_code)
 
     # Test placement
+    test_code = sanitize_test_code(test_code)
     test_pkg = _extract_package_name(test_code)
     if not test_pkg and src_pkg:
         test_pkg = src_pkg
